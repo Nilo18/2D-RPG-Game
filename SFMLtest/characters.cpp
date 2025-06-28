@@ -11,6 +11,7 @@ bool circleIntersectsRect(float cx, float cy, float radius, const FloatRect& rec
     return (distanceX * distanceX + distanceY * distanceY) < (radius * radius);
 }
 
+// Functions related to Human
 Human::Human(const string& texturePath, int startX, int startY) {
     this->startX = startX;
     this->startY = startY;
@@ -106,4 +107,15 @@ void Human::draw(RenderWindow& window) {
 
 void Human::setScale(float scaleX, float scaleY) {
     infSprite.setScale(scaleX, scaleY);
+}
+
+// Functions related to NPC
+NPC::NPC(const string& texturePath, int startX, int startY) {
+    if (!npcTexture.loadFromFile(texturePath)) {
+        throw runtime_error("Couldn't load NPC texture.");
+    }
+    npcSprite.setTexture(npcTexture);
+    this->startX = startX;
+    this->startY = startY;
+    npcSprite.setPosition(this->startX, this->startY);
 }

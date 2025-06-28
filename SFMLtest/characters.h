@@ -27,4 +27,16 @@ public:
 
 bool circleIntersectsRect(float cx, float cy, float radius, const FloatRect& rect);
 
+class NPC {
+private:
+    Sprite npcSprite;
+    Texture npcTexture;
+    int startX;
+    int startY;
+public:
+    NPC(const string& texturePath, int startX, int startY);
+    void talk();
+};
+
+
 #endif
