@@ -18,6 +18,12 @@
     <ClCompile Include="SFMLtest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="nature.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="characters.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Downloads\map.png">
@@ -26,5 +32,13 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\Downloads\tilemap.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="nature.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="characters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

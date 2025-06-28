@@ -132,6 +132,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="characters.cpp" />
+    <ClCompile Include="nature.cpp" />
     <ClCompile Include="SFMLtest.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +143,10 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\Downloads\tilemap.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="characters.h" />
+    <ClInclude Include="nature.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
