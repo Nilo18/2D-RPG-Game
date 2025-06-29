@@ -74,29 +74,33 @@ bool Human::infantryIsColliding(int offsetX, int offsetY, Rock& rock, WaterGroup
 }
 
 void Human::moveLeft(Rock& rock, WaterGroup& waterBlocks, Water* water) {
-    if (startX > 0 && !infantryIsColliding(-1, 0, rock, waterBlocks, water)) {
-        startX -= 1;
+    if (startX > 0 && !infantryIsColliding(-10, 0, rock, waterBlocks, water)) {
+        startX -= 10;
         infSprite.setPosition(startX, startY);
     }
 }
 
-void Human::moveRight(Rock& rock, WaterGroup& waterBlocks, Water* water) {
-    if (startX <= 1000 && !infantryIsColliding(1, 0, rock, waterBlocks, water)) {
-        startX += 1;
+void Human::moveRight(Rock& rock, WaterGroup& waterBlocks, RenderWindow& window, Water* water) {
+    float rightEdge = window.getSize().x;
+    float soldierRight = infSprite.getPosition().x + infSprite.getGlobalBounds().width;
+    if (soldierRight <= rightEdge && !infantryIsColliding(10, 0, rock, waterBlocks, water)) {
+        startX += 10;
         infSprite.setPosition(startX, startY);
     }
 }
 
-void Human::moveDown(Rock& rock, WaterGroup& waterBlocks, Water* water) {
-    if (startY <= 800 && !infantryIsColliding(0, 1, rock, waterBlocks, water)) {
-        startY += 1;
+void Human::moveDown(Rock& rock, WaterGroup& waterBlocks, RenderWindow& window, Water* water) {
+    float bottomEdge = window.getSize().y;
+    float soldierBottom = infSprite.getPosition().y + infSprite.getGlobalBounds().height;
+    if (soldierBottom <= bottomEdge && !infantryIsColliding(0, 10, rock, waterBlocks, water)) {
+        startY += 10;
         infSprite.setPosition(startX, startY);
     }
 }
 
 void Human::moveUp(Rock& rock, WaterGroup& waterBlocks, Water* water) {
-    if (startY > 0 && !infantryIsColliding(0, -1, rock, waterBlocks, water)) {
-        startY -= 1;
+    if (startY > 0 && !infantryIsColliding(0, -10, rock, waterBlocks, water)) {
+        startY -= 10;
         infSprite.setPosition(startX, startY);
     }
 }

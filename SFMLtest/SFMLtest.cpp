@@ -11,6 +11,7 @@
 using namespace sf;
 using namespace std;
 using namespace std::filesystem;
+const float moveDelay = 0.03f;
 
 int main() {
     // Create a window with title and size
@@ -25,6 +26,8 @@ int main() {
     Human soldier("assets/infantry2.png", 100, 250);
     soldier.setScale(2.f, 2.f);  // doubles width and height
 
+    Clock moveTime;
+
     // Main loop
     while (window.isOpen()) {
         Event event;
@@ -34,15 +37,22 @@ int main() {
                 window.close();
         }
 
-        //If key is pressed check which one is it
-        if (Event::KeyPressed && event.key.code == Keyboard::A) 
-            soldier.moveLeft(rock, waterBlocks);
-         if (Event::KeyPressed && event.key.code == Keyboard::D) 
-            soldier.moveRight(rock, waterBlocks);
-         if (Event::KeyPressed && event.key.code == Keyboard::S) 
-            soldier.moveDown(rock, waterBlocks);
-         if (Event::KeyPressed && event.key.code == Keyboard::W) 
-            soldier.moveUp(rock, waterBlocks);
+        if (moveTime.getElapsedTime().asSeconds() > moveDelay) {
+            //If key is pressed check which one is it
+            if (Keyboard::isKeyPressed(Keyboard::A)) {
+                soldier.moveLeft(rock, waterBlocks);
+            }
+            if (Keyboard::isKeyPressed(Keyboard::D)) {
+                soldier.moveRight(rock, waterBlocks, window);
+            }
+            if (Keyboard::isKeyPressed(Keyboard::S)) {
+                soldier.moveDown(rock, waterBlocks, window);
+            }
+            if (Keyboard::isKeyPressed(Keyboard::W)) {
+                soldier.moveUp(rock, waterBlocks);
+            }
+            moveTime.restart();
+        }
 
                
         // Clear the screen with black

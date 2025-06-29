@@ -15,8 +15,8 @@ private:
 public:
     Human(const string& texturePath, int startX, int startY);
     void moveLeft(Rock& rock, WaterGroup& waterBlocks, Water* water = nullptr);
-    void moveRight(Rock& rock, WaterGroup& waterBlocks, Water* water = nullptr);
-    void moveDown(Rock& rock, WaterGroup& waterBlocks, Water* water = nullptr);
+    void moveRight(Rock& rock, WaterGroup& waterBlocks, RenderWindow& window, Water* water = nullptr);
+    void moveDown(Rock& rock, WaterGroup& waterBlocks, RenderWindow& window, Water* water = nullptr);
     void moveUp(Rock& rock, WaterGroup& waterBlocks, Water* water = nullptr);
     void draw(RenderWindow& window);
     void setScale(float scaleX, float scaleY);
