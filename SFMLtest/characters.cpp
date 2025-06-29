@@ -74,29 +74,29 @@ bool Human::infantryIsColliding(int offsetX, int offsetY, Rock& rock, WaterGroup
 }
 
 void Human::moveLeft(Rock& rock, WaterGroup& waterBlocks, Water* water) {
-    if (startX > 0 && !infantryIsColliding(-5, 0, rock, waterBlocks, water)) {
-        startX -= 5;
+    if (startX > 0 && !infantryIsColliding(-1, 0, rock, waterBlocks, water)) {
+        startX -= 1;
         infSprite.setPosition(startX, startY);
     }
 }
 
 void Human::moveRight(Rock& rock, WaterGroup& waterBlocks, Water* water) {
-    if (startX <= 1000 && !infantryIsColliding(5, 0, rock, waterBlocks, water)) {
-        startX += 5;
+    if (startX <= 1000 && !infantryIsColliding(1, 0, rock, waterBlocks, water)) {
+        startX += 1;
         infSprite.setPosition(startX, startY);
     }
 }
 
 void Human::moveDown(Rock& rock, WaterGroup& waterBlocks, Water* water) {
-    if (startY <= 800 && !infantryIsColliding(0, 5, rock, waterBlocks, water)) {
-        startY += 5;
+    if (startY <= 800 && !infantryIsColliding(0, 1, rock, waterBlocks, water)) {
+        startY += 1;
         infSprite.setPosition(startX, startY);
     }
 }
 
 void Human::moveUp(Rock& rock, WaterGroup& waterBlocks, Water* water) {
-    if (startY > 0 && !infantryIsColliding(0, -5, rock, waterBlocks, water)) {
-        startY -= 5;
+    if (startY > 0 && !infantryIsColliding(0, -1, rock, waterBlocks, water)) {
+        startY -= 1;
         infSprite.setPosition(startX, startY);
     }
 }

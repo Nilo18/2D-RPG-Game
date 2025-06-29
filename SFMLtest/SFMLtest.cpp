@@ -30,24 +30,21 @@ int main() {
         Event event;
         while (window.pollEvent(event)) {
             // Close window on request
-            switch (event.type) {
-                case Event::Closed:
-                    window.close(); break;
-                     //If key is pressed check which one is it
-                case Event::KeyPressed:
-                    switch (event.key.code) {
-                    case Keyboard::A:
-                        soldier.moveLeft(rock, waterBlocks); break;
-                    case Keyboard::D:
-                        soldier.moveRight(rock, waterBlocks); break;
-                    case Keyboard::S:
-                        soldier.moveDown(rock, waterBlocks); break;
-                    case Keyboard::W:   
-                        soldier.moveUp(rock, waterBlocks); break;
-                    }
-            }
-                
+            if (event.type == Event::Closed)
+                window.close();
         }
+
+        //If key is pressed check which one is it
+        if (Event::KeyPressed && event.key.code == Keyboard::A) 
+            soldier.moveLeft(rock, waterBlocks);
+         if (Event::KeyPressed && event.key.code == Keyboard::D) 
+            soldier.moveRight(rock, waterBlocks);
+         if (Event::KeyPressed && event.key.code == Keyboard::S) 
+            soldier.moveDown(rock, waterBlocks);
+         if (Event::KeyPressed && event.key.code == Keyboard::W) 
+            soldier.moveUp(rock, waterBlocks);
+
+               
         // Clear the screen with black
         window.clear(Color(105, 255, 255, 255)); // Clear old frame
         window.draw(grassBlocks);
