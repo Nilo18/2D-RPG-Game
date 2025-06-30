@@ -21,9 +21,9 @@ int main() {
     // To determine how many blocks we have to draw we divide the width and height by the tile size and add 1
     // First value of Grass/Water Group takes the texture, second and third starting x and y positions and fourth and fifth the area on which they should span
     GrassGroup grassBlocks("assets/grass2.png", 0, 0, window.getSize().y / TILE_SIZE + 1, window.getSize().x / TILE_SIZE + 1);
-    WaterGroup waterBlocks("assets/water.png", 0, 0, 3, 5);
+    WaterGroup waterBlocks("assets/water7.png", 0, 0, 3, 5);
     Rock rock("assets/rock2.png", 500, 500);
-    Human soldier("assets/infantry2.png", 100, 250);
+    Human soldier("assets/avtandila.png", 100, 250);
     soldier.setScale(2.f, 2.f);  // doubles width and height
 
     Clock moveTime;
