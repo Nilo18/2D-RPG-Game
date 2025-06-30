@@ -27,6 +27,33 @@ int main() {
     soldier.setScale(2.f, 2.f);  // doubles width and height
 
     Clock moveTime;
+    FloatRect bounds = rock.getCollisionBox();
+
+    CircleHitbox hitbox = rock.getCollisionBoxData();
+
+    CircleShape debugBox;
+    debugBox.setRadius(hitbox.radius);
+    debugBox.setOrigin(hitbox.radius, hitbox.radius);
+    debugBox.setPosition(hitbox.centerX, hitbox.centerY);
+    debugBox.setFillColor(Color::Transparent);
+    debugBox.setOutlineColor(Color::Red);
+    debugBox.setOutlineThickness(1.f); // Required to see the red outline
+
+    sf::FloatRect soldierBounds = soldier.getCollisionBox();  // Or next position with offset
+    sf::RectangleShape soldierBox;
+    soldierBox.setPosition(soldierBounds.left, soldierBounds.top);
+    soldierBox.setSize({ soldierBounds.width, soldierBounds.height });
+    soldierBox.setOutlineColor(sf::Color::Blue);
+    soldierBox.setOutlineThickness(1.f);
+    soldierBox.setFillColor(sf::Color::Transparent);
+
+    FloatRect soldierLegHitbox = soldier.getLegHitbox();
+    RectangleShape legHitbox;
+    legHitbox.setPosition(soldierLegHitbox.left, soldierLegHitbox.top);
+    legHitbox.setSize({ soldierLegHitbox.width, soldierLegHitbox.height });
+    legHitbox.setOutlineColor(sf::Color::Yellow);
+    legHitbox.setOutlineThickness(1.f);
+    legHitbox.setFillColor(sf::Color::Transparent);
 
     // Main loop
     while (window.isOpen()) {
@@ -60,7 +87,10 @@ int main() {
         window.draw(grassBlocks);
         window.draw(waterBlocks);
         rock.draw(window);
+        //window.draw(debugBox);
         soldier.draw(window);
+        //window.draw(soldierBox);
+        //window.draw(legHitbox);
         window.display(); // Tell the app that the window is done drawing
     }
 

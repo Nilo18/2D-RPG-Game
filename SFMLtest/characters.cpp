@@ -128,11 +128,3 @@ void Human::setScale(float scaleX, float scaleY) {
 
 // Functions related to NPC
 NPC::NPC(const string& texturePath, int startX, int startY) : Entity(texturePath, startX, startY) {}
-//    if (!npcTexture.loadFromFile(texturePath)) {
-//        throw runtime_error("Couldn't load NPC texture.");
-//    }
-//    npcSprite.setTexture(npcTexture);
-//    this->startX = startX;
-//    this->startY = startY;
-//    npcSprite.setPosition(this->startX, this->startY);
-//}

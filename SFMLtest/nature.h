@@ -69,7 +69,6 @@ public:
     CircleHitbox getCollisionBoxData();
 };
 
-
 extern const int TILE_SIZE;
 extern const int TILES_X;  // = 15
 extern const int TILES_Y;   // = 12
