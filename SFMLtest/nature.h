@@ -1,19 +1,34 @@
 #pragma once
-#ifndef NATURE_H
-#define NATURE_H
+//#ifndef NATURE_H
+//#define NATURE_H
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
 
-class Grass {
-private:
-    Sprite grassSprite;
-    Texture grassTexture;
+struct CircleHitbox {
+    float centerX;
+    float centerY;
+    float radius;
+};
+
+// Base class for every natural object
+class NatureObject {
+protected:
+    Sprite sprite;
+    Texture texture;
     int startX;
     int startY;
 public:
+    NatureObject(const string& texturePath, int startX, int startY);
+    const Sprite& getSprite() const;
+    virtual FloatRect getCollisionBox(); // We don't return by a const reference here because we're returning a temporary variable, created in the body
+    virtual CircleHitbox getCollisionBoxData();
+    virtual void draw(RenderWindow& window);
+};
+
+class Grass : public NatureObject {
+public:
     Grass(const string& texturePath, int startX, int startY);
-    const Sprite& getSprite(); // Return by a const reference to avoid modification via the getter
 };
 
 class GrassGroup : public Drawable {
@@ -27,15 +42,9 @@ public:
     virtual void draw(RenderTarget& target, RenderStates states) const override; // This method will be called internally when drawing the object
 };
 
-class Water {
-private:
-    Sprite waterSprite;
-    Texture waterTexture;
-    int startX;
-    int startY;
+class Water : public NatureObject {
 public:
     Water(const string& texturePath, int startX, int startY);
-    const Sprite& getSprite() const;
 };
 
 class WaterGroup : public Drawable {
@@ -49,28 +58,15 @@ public:
     const Sprite& getSprite() const;
 };
 
-struct CircleHitbox {
-    float centerX;
-    float centerY;
-    float radius;
-};
-
-class Rock {
-private:
-    Sprite rockSprite;
-    Texture rockTexture;
-    int startX;
-    int startY;
+class Rock : public NatureObject {
 public:
     Rock(const string& texturePath, float startX, float startY);
-    void draw(RenderWindow& window);
-    const Sprite& getSprite() const;
-    FloatRect getCollisionBox(); // We don't return by a const reference here because we're returning a temporary variable, created in the body
-    CircleHitbox getCollisionBoxData();
+    FloatRect getCollisionBox() override; // We don't return by a const reference here because we're returning a temporary variable, created in the body
+    CircleHitbox getCollisionBoxData() override;
 };
 
 extern const int TILE_SIZE;
 extern const int TILES_X;  // = 15
 extern const int TILES_Y;   // = 12
 
-#endif
+//#endif

@@ -3,18 +3,33 @@ const int TILE_SIZE = 64;
 const int TILES_X = 1000 / TILE_SIZE;
 const int TILES_Y = 800 / TILE_SIZE;
 
-// Grass methods (one block)
-Grass::Grass(const string& texturePath, int startX, int startY) {
-    if (!grassTexture.loadFromFile(texturePath)) {
-        throw runtime_error("Couldn't load grass texture.");
+// NatureObject base class methods
+NatureObject::NatureObject(const string& texturePath, int startX, int startY) {
+    if (!texture.loadFromFile(texturePath)) {
+        throw runtime_error("Couldn't load a nature object.");
     }
-    grassSprite.setTexture(grassTexture);
+    sprite.setTexture(texture);
     this->startX = startX;
     this->startY = startY;
-    grassSprite.setPosition(this->startX, this->startY);
+    sprite.setPosition(this->startX, this->startY);
 }
 
-const Sprite& Grass::getSprite() { return grassSprite; }
+void NatureObject::draw(RenderWindow& window) {
+    window.draw(sprite);
+}
+
+const Sprite& NatureObject::getSprite() const { return sprite; }
+
+FloatRect NatureObject::getCollisionBox() {
+    return sprite.getGlobalBounds();
+}
+
+CircleHitbox NatureObject::getCollisionBoxData() {
+    return { 0, 0, 0 };
+}
+
+// Grass methods (one block)
+Grass::Grass(const string& texturePath, int startX, int startY) : NatureObject(texturePath, startX, startY) {}
 
 // GrassGroup methods
 void GrassGroup::draw(RenderTarget& target, RenderStates states) const {
@@ -43,17 +58,9 @@ GrassGroup::~GrassGroup() {
 const vector <Grass*>& GrassGroup::getGrassTiles() const { return grassTiles; }
 
 // Water methods (1 block of water)
-Water::Water(const string& texturePath, int startX, int startY) {
-    if (!waterTexture.loadFromFile(texturePath)) {
-        throw runtime_error("Couldn't load water texture.");
-    }
-    waterSprite.setTexture(waterTexture);
-    this->startX = startX;
-    this->startY = startY;
-    waterSprite.setPosition(this->startX, this->startY);
-}
+Water::Water(const string& texturePath, int startX, int startY) : NatureObject(texturePath, startX, startY) {}
 
-const Sprite& Water::getSprite() const { return waterSprite; }
+//const Sprite& Water::getSprite() const { return waterSprite; }
 
 // WaterGroup methods
 WaterGroup::WaterGroup(const string& texturePath, float startX, float startY, int rowsToSpan, int colsToSpan) {
@@ -82,24 +89,16 @@ void WaterGroup::draw(RenderTarget& target, RenderStates states) const {
 const vector<Water*>& WaterGroup::getWaterTiles() const { return waterTiles; }
 
 // Rock methods
-Rock::Rock(const string& texturePath, float startX, float startY) {
-    if (!rockTexture.loadFromFile(texturePath)) {
-        throw runtime_error("Failed to load rock texture.");
-    }
-    rockSprite.setTexture(rockTexture);
-    this->startX = startX;
-    this->startY = startY;
-    rockSprite.setPosition(this->startX, this->startY);
-}
+Rock::Rock(const string& texturePath, float startX, float startY) : NatureObject(texturePath, startX, startY) {}
 
-const Sprite& Rock::getSprite() const { return rockSprite; }
+//const Sprite& Rock::getSprite() const { return rockSprite; }
 
 FloatRect Rock::getCollisionBox() {
-    float diameter = rockSprite.getGlobalBounds().width * 0.5f;
+    float diameter = sprite.getGlobalBounds().width * 0.5f;
     float radius = diameter / 2.f;
 
-    float centerX = rockSprite.getPosition().x + rockSprite.getGlobalBounds().width / 2.f;
-    float centerY = rockSprite.getPosition().y + rockSprite.getGlobalBounds().height / 2.f;
+    float centerX = sprite.getPosition().x + sprite.getGlobalBounds().width / 2.f;
+    float centerY = sprite.getPosition().y + sprite.getGlobalBounds().height / 2.f;
 
     centerY += 1.1;
 
@@ -107,18 +106,14 @@ FloatRect Rock::getCollisionBox() {
 }
 
 CircleHitbox Rock::getCollisionBoxData() {
-    float diameter = rockSprite.getGlobalBounds().width * 0.6f;
+    float diameter = sprite.getGlobalBounds().width * 0.6f;
     float radius = diameter / 2.f;
 
-    float centerX = rockSprite.getPosition().x + rockSprite.getGlobalBounds().width / 2.f;
-    float centerY = rockSprite.getPosition().y + rockSprite.getGlobalBounds().height / 2.f;
+    float centerX = sprite.getPosition().x + sprite.getGlobalBounds().width / 2.f;
+    float centerY = sprite.getPosition().y + sprite.getGlobalBounds().height / 2.f;
 
     centerY += 1.1;
 
     return { centerX, centerY, radius };
 }
 
-
-void Rock::draw(RenderWindow& window) {
-    window.draw(rockSprite);
-}
