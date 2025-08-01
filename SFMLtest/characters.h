@@ -3,6 +3,7 @@
 #define CHARACTERS_H
 #include <SFML/Graphics.hpp>
 #include "nature.h"
+#include <iostream>
 using namespace sf;
 using namespace std;
 
@@ -16,6 +17,7 @@ protected:
 public:
     Entity(const string& texturePath, int startX, int startY);
     virtual FloatRect getCollisionBox();
+    void setScale(float scaleX, float scaleY);
     virtual void draw(RenderWindow& window);
 };
 
@@ -28,7 +30,6 @@ public:
     void moveDown(Rock& rock, WaterGroup& waterBlocks, RenderWindow& window, Water* water = nullptr);
     void moveUp(Rock& rock, WaterGroup& waterBlocks, Water* water = nullptr);
     //void draw(RenderWindow& window) override;
-    void setScale(float scaleX, float scaleY);
     bool infantryIsColliding(int offsetX, int offsetY, Rock& rock, WaterGroup& waterBlocks, Water* water = nullptr); // Take all collidable objects as parameters to check for each 
     FloatRect getCollisionBox() override; // We don't return by a const reference here because we're returning a temporary variable, created in the body
     FloatRect getLegHitbox();
@@ -37,9 +38,11 @@ public:
 bool circleIntersectsRect(float cx, float cy, float radius, const FloatRect& rect);
 
 class NPC : public Entity {
+//private:
+//    Font font;
 public:
     NPC(const string& texturePath, int startX, int startY);
-    void talk();
+    void talk(RenderWindow& window, Human& player);
 };
 
 

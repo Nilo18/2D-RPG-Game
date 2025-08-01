@@ -12,6 +12,8 @@ using namespace sf;
 using namespace std;
 using namespace std::filesystem;
 const float moveDelay = 0.03f;
+const float npcTalkDuration = 5.f;
+//bool npcTalking = false;
 
 int main() {
     // Create a window with title and size
@@ -24,6 +26,8 @@ int main() {
     WaterGroup waterBlocks("assets/water7.png", 0, 0, 3, 5);
     Rock rock("assets/rock2.png", 500, 500);
     Human soldier("assets/avtandila.png", 100, 250);
+    NPC npc("assets/avtandila.png", 500, 0);
+    npc.setScale(2.f, 2.f);
     soldier.setScale(2.f, 2.f);  // doubles width and height
 
     Clock moveTime;
@@ -55,6 +59,8 @@ int main() {
     legHitbox.setOutlineThickness(1.f);
     legHitbox.setFillColor(sf::Color::Transparent);
 
+    Clock npcTalkTime;
+
     // Main loop
     while (window.isOpen()) {
         Event event;
@@ -62,6 +68,12 @@ int main() {
             // Close window on request
             if (event.type == Event::Closed)
                 window.close();
+            //if (event.type == Event::KeyPressed && event.key.code == Keyboard::F) {
+            //    npcTalking = true;
+            //}
+            //if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter) {
+            //    npcTalking = false;
+            //}
         }
 
         if (moveTime.getElapsedTime().asSeconds() > moveDelay) {
@@ -81,7 +93,6 @@ int main() {
             moveTime.restart();
         }
 
-               
         // Clear the screen with black
         window.clear(Color(105, 255, 255, 255)); // Clear old frame
         window.draw(grassBlocks);
@@ -89,8 +100,12 @@ int main() {
         rock.draw(window);
         //window.draw(debugBox);
         soldier.draw(window);
+        npc.draw(window);
         //window.draw(soldierBox);
         //window.draw(legHitbox);
+        //if (npcTalking) {
+        npc.talk(window, soldier);
+        //}
         window.display(); // Tell the app that the window is done drawing
     }
 

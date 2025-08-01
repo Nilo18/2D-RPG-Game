@@ -19,6 +19,10 @@ FloatRect Entity::getCollisionBox() {
     return sprite.getGlobalBounds();
 }
 
+void Entity::setScale(float scaleX, float scaleY) {
+    sprite.setScale(scaleX, scaleY);
+}
+
 // Function for checking rock's collision (circular hitbox) with player (rectangle hitbox)
 bool circleIntersectsRect(float cx, float cy, float radius, const FloatRect& rect) {
     float closestX = clamp(cx, rect.left, rect.left + rect.width);
@@ -122,9 +126,33 @@ void Human::moveUp(Rock& rock, WaterGroup& waterBlocks, Water* water) {
 //    window.draw(sprite);
 //}
 
-void Human::setScale(float scaleX, float scaleY) {
-    sprite.setScale(scaleX, scaleY);
-}
-
 // Functions related to NPC
 NPC::NPC(const string& texturePath, int startX, int startY) : Entity(texturePath, startX, startY) {}
+
+// This is the talk function for NPCs
+void NPC::talk(RenderWindow& window, Human& player) {
+    // Check if the NPC is colliding with player (player is nearby)
+    FloatRect collisionBox = getCollisionBox();
+    if (collisionBox.intersects(player.getCollisionBox()) || collisionBox.intersects(player.getLegHitbox())) {
+        // If it is draw a rectangle and text to show what the NPC has to say
+        float bottomEdge = window.getSize().y;
+        RectangleShape dialogBox;
+        dialogBox.setPosition(1, bottomEdge - 200);
+        dialogBox.setFillColor(Color(0, 0, 0, 128));
+        dialogBox.setOutlineColor(Color::Red);
+        dialogBox.setOutlineThickness(2.f);
+        dialogBox.setSize(Vector2f(990, 200));
+   
+        Text dialogText;
+        Font font;
+        if (!font.loadFromFile("assets/OpenSans-VariableFont_wdth,wght.ttf")) cerr << "Couldn't load font";
+        dialogText.setFont(font);
+        dialogText.setString("Hello traveller!");
+        dialogText.setFillColor(Color::White);
+        dialogText.setOutlineColor(Color::White);
+        dialogText.setCharacterSize(24);
+        dialogText.setPosition(15, bottomEdge - 185);
+        window.draw(dialogBox);
+        window.draw(dialogText);
+    }
+}
