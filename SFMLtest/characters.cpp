@@ -135,24 +135,8 @@ NPC::NPC(const string& texturePath, int startX, int startY) : Entity(texturePath
 
 // This is the talk function for NPCs
 void NPC::talk(RenderWindow& window, Human& player) {
-    FloatRect collisionBox = getCollisionBox();
     float bottomEdge = window.getSize().y;
-    RectangleShape dialogBox;
-    dialogBox.setPosition(1.f, bottomEdge - 200.f); // .f casts numbers to floats, we cast it to make the compiler's job easier
-    dialogBox.setFillColor(Color(0, 0, 0, 128));
-    dialogBox.setOutlineColor(Color::Red);
-    dialogBox.setOutlineThickness(2.f);
-    dialogBox.setSize(Vector2f(990.f, 200.f));
-   
-    Text dialogText;
-    Font font;
-    if (!font.loadFromFile("assets/OpenSans-VariableFont_wdth,wght.ttf")) cerr << "Couldn't load font";
-    dialogText.setFont(font);
-    dialogText.setString("Hello traveller!");
-    dialogText.setFillColor(Color::White);
-    dialogText.setOutlineColor(Color::White);
-    dialogText.setCharacterSize(24);
-    dialogText.setPosition(15.f, bottomEdge - 185.f);
+    DialogueBox dialogBox(990.f, 200.f, 1.f, bottomEdge - 200.f, Color(0, 0, 0, 128), Color::Red);
+    dialogBox.setText("Hello traveller!\n");
     window.draw(dialogBox);
-    window.draw(dialogText);
 }

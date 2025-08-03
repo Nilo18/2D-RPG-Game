@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "nature.h"
 #include <iostream>
+#include "Game_GUI.h"
 using namespace sf;
 using namespace std;
 
