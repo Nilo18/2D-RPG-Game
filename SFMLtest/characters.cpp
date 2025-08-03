@@ -36,6 +36,10 @@ bool circleIntersectsRect(float cx, float cy, float radius, const FloatRect& rec
 
 // Functions related to Human
 Human::Human(const string& texturePath, int startX, int startY) : Entity(texturePath, startX, startY) {}
+
+void Human::shouldMove(bool val) {
+    shouldBeAbleToMove = val;
+}
     
 FloatRect Human::getCollisionBox() {
     FloatRect boundingBox = sprite.getGlobalBounds();
@@ -89,7 +93,7 @@ bool Human::infantryIsColliding(int offsetX, int offsetY, Rock& rock, WaterGroup
 }
 
 void Human::moveLeft(Rock& rock, WaterGroup& waterBlocks, Water* water) {
-    if (startX > 0 && !infantryIsColliding(-10, 0, rock, waterBlocks, water)) {
+    if (startX > 0 && !infantryIsColliding(-10, 0, rock, waterBlocks, water) && shouldBeAbleToMove) {
         startX -= 10;
         sprite.setPosition(startX, startY);
     }
@@ -99,7 +103,7 @@ void Human::moveRight(Rock& rock, WaterGroup& waterBlocks, RenderWindow& window,
     // Check if the character's right is colliding with the right edge of the window
     float rightEdge = window.getSize().x;
     float soldierRight = sprite.getPosition().x + sprite.getGlobalBounds().width;
-    if (soldierRight <= rightEdge && !infantryIsColliding(10, 0, rock, waterBlocks, water)) {
+    if (soldierRight <= rightEdge && !infantryIsColliding(10, 0, rock, waterBlocks, water) && shouldBeAbleToMove) {
         startX += 10;
         sprite.setPosition(startX, startY);
     }
@@ -109,14 +113,14 @@ void Human::moveDown(Rock& rock, WaterGroup& waterBlocks, RenderWindow& window, 
     // Check if the character's bottom is colliding with the bottom edge of the window
     float bottomEdge = window.getSize().y;
     float soldierBottom = sprite.getPosition().y + sprite.getGlobalBounds().height;
-    if (soldierBottom <= bottomEdge && !infantryIsColliding(0, 10, rock, waterBlocks, water)) {
+    if (soldierBottom <= bottomEdge && !infantryIsColliding(0, 10, rock, waterBlocks, water) && shouldBeAbleToMove) {
         startY += 10;
         sprite.setPosition(startX, startY);
     }
 }
 
 void Human::moveUp(Rock& rock, WaterGroup& waterBlocks, Water* water) {
-    if (startY > 0 && !infantryIsColliding(0, -10, rock, waterBlocks, water)) {
+    if (startY > 0 && !infantryIsColliding(0, -10, rock, waterBlocks, water) && shouldBeAbleToMove) {
         startY -= 10;
         sprite.setPosition(startX, startY);
     }
@@ -131,28 +135,24 @@ NPC::NPC(const string& texturePath, int startX, int startY) : Entity(texturePath
 
 // This is the talk function for NPCs
 void NPC::talk(RenderWindow& window, Human& player) {
-    // Check if the NPC is colliding with player (player is nearby)
     FloatRect collisionBox = getCollisionBox();
-    if (collisionBox.intersects(player.getCollisionBox()) || collisionBox.intersects(player.getLegHitbox())) {
-        // If it is draw a rectangle and text to show what the NPC has to say
-        float bottomEdge = window.getSize().y;
-        RectangleShape dialogBox;
-        dialogBox.setPosition(1, bottomEdge - 200);
-        dialogBox.setFillColor(Color(0, 0, 0, 128));
-        dialogBox.setOutlineColor(Color::Red);
-        dialogBox.setOutlineThickness(2.f);
-        dialogBox.setSize(Vector2f(990, 200));
+    float bottomEdge = window.getSize().y;
+    RectangleShape dialogBox;
+    dialogBox.setPosition(1.f, bottomEdge - 200.f); // .f casts numbers to floats, we cast it to make the compiler's job easier
+    dialogBox.setFillColor(Color(0, 0, 0, 128));
+    dialogBox.setOutlineColor(Color::Red);
+    dialogBox.setOutlineThickness(2.f);
+    dialogBox.setSize(Vector2f(990.f, 200.f));
    
-        Text dialogText;
-        Font font;
-        if (!font.loadFromFile("assets/OpenSans-VariableFont_wdth,wght.ttf")) cerr << "Couldn't load font";
-        dialogText.setFont(font);
-        dialogText.setString("Hello traveller!");
-        dialogText.setFillColor(Color::White);
-        dialogText.setOutlineColor(Color::White);
-        dialogText.setCharacterSize(24);
-        dialogText.setPosition(15, bottomEdge - 185);
-        window.draw(dialogBox);
-        window.draw(dialogText);
-    }
+    Text dialogText;
+    Font font;
+    if (!font.loadFromFile("assets/OpenSans-VariableFont_wdth,wght.ttf")) cerr << "Couldn't load font";
+    dialogText.setFont(font);
+    dialogText.setString("Hello traveller!");
+    dialogText.setFillColor(Color::White);
+    dialogText.setOutlineColor(Color::White);
+    dialogText.setCharacterSize(24);
+    dialogText.setPosition(15.f, bottomEdge - 185.f);
+    window.draw(dialogBox);
+    window.draw(dialogText);
 }

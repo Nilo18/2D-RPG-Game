@@ -13,7 +13,7 @@ using namespace std;
 using namespace std::filesystem;
 const float moveDelay = 0.03f;
 const float npcTalkDuration = 5.f;
-//bool npcTalking = false;
+bool npcShouldTalk = false;
 
 int main() {
     // Create a window with title and size
@@ -59,7 +59,7 @@ int main() {
     legHitbox.setOutlineThickness(1.f);
     legHitbox.setFillColor(sf::Color::Transparent);
 
-    Clock npcTalkTime;
+    //Clock npcTalkTime;
 
     // Main loop
     while (window.isOpen()) {
@@ -68,12 +68,16 @@ int main() {
             // Close window on request
             if (event.type == Event::Closed)
                 window.close();
-            //if (event.type == Event::KeyPressed && event.key.code == Keyboard::F) {
-            //    npcTalking = true;
-            //}
-            //if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter) {
-            //    npcTalking = false;
-            //}
+            // If F was pressed and the player is within the range of the npc, the npc should be able to talk
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::F && (npc.getCollisionBox().intersects(soldier.getCollisionBox()) || npc.getCollisionBox().intersects(soldier.getLegHitbox()))) {
+                npcShouldTalk = true;
+                soldier.shouldMove(false); // The player shouldn't be able to move while talking
+            }
+            //If Enter was pressed the npc shouldn't be able to talk anymore
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter) {
+                npcShouldTalk = false;
+                soldier.shouldMove(true);
+            }
         }
 
         if (moveTime.getElapsedTime().asSeconds() > moveDelay) {
@@ -103,9 +107,9 @@ int main() {
         npc.draw(window);
         //window.draw(soldierBox);
         //window.draw(legHitbox);
-        //if (npcTalking) {
-        npc.talk(window, soldier);
-        //}
+        if (npcShouldTalk) {
+            npc.talk(window, soldier);
+        }
         window.display(); // Tell the app that the window is done drawing
     }
 

@@ -23,6 +23,8 @@ public:
 
 // Private field is no longer necessary as Human is a child of Entity
 class Human : public Entity {
+private:
+    bool shouldBeAbleToMove = true;
 public:
     Human(const string& texturePath, int startX, int startY);
     void moveLeft(Rock& rock, WaterGroup& waterBlocks, Water* water = nullptr);
@@ -33,12 +35,13 @@ public:
     bool infantryIsColliding(int offsetX, int offsetY, Rock& rock, WaterGroup& waterBlocks, Water* water = nullptr); // Take all collidable objects as parameters to check for each 
     FloatRect getCollisionBox() override; // We don't return by a const reference here because we're returning a temporary variable, created in the body
     FloatRect getLegHitbox();
+    void shouldMove(bool val);
 };
 
 bool circleIntersectsRect(float cx, float cy, float radius, const FloatRect& rect);
 
 class NPC : public Entity {
-//private:
+private:
 //    Font font;
 public:
     NPC(const string& texturePath, int startX, int startY);
