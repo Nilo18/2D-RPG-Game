@@ -21,7 +21,6 @@ public:
     virtual void draw(RenderWindow& window);
 };
 
-// Private field is no longer necessary as Human is a child of Entity
 class Human : public Entity {
 private:
     bool shouldBeAbleToMove = true;

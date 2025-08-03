@@ -133,6 +133,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="characters.cpp" />
+    <ClCompile Include="Game_GUI.cpp" />
     <ClCompile Include="nature.cpp" />
     <ClCompile Include="SFMLtest.cpp" />
   </ItemGroup>
@@ -146,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="characters.h" />
+    <ClInclude Include="Game_GUI.h" />
     <ClInclude Include="nature.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
