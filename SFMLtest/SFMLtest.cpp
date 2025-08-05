@@ -14,12 +14,54 @@ using namespace std::filesystem;
 const float moveDelay = 0.03f;
 const float npcTalkDuration = 5.f;
 bool npcShouldTalk = false;
+ 
+void LetterBoxView(sf::RenderWindow& window, sf::View& view, int wWidth, int wHeight) {
+    float windowRatio = (float)wWidth / wHeight;
+    float viewRatio = view.getSize().x / view.getSize().y;
+    float sizeX = 1.f, sizeY = 1.f;
+    float posX = 0.f, posY = 0.f;
 
+    if (windowRatio > viewRatio)
+    {
+        sizeX = viewRatio / windowRatio;
+        posX = (1 - sizeX)/2.f;
+    }
+    else {
+        sizeY = windowRatio / viewRatio;
+        posY = (1 - sizeY)/2.f;
+    }
+    view.setViewport(sf::FloatRect(posX, posY, sizeX, sizeY));
+    window.setView(view);
+}
+void toggleFullscreen(sf::RenderWindow& window, bool& fullscreen, sf::View& view) {
+    fullscreen = !fullscreen;
+    sf::Vector2u basesize(990, 880);  // Basic size of window
+
+    window.close();
+    if (fullscreen)
+        window.create(sf::VideoMode::getDesktopMode(), "SFML", sf::Style::Fullscreen);
+    else
+        window.create(sf::VideoMode(basesize.x, basesize.y), "SFML", sf::Style::Default);
+    
+    view.setSize((float)basesize.x, (float)basesize.y);
+    view.setCenter(basesize.x / 2.f, basesize.y / 2.f);
+    window.setView(view);
+
+    LetterBoxView(window, view, window.getSize().x, window.getSize().y);
+}
 int main() {
     // Create a window with title and size
     //std::cout << "Working directory is: " << filesystem::current_path() << std::endl; 
-   
-    RenderWindow window(sf::VideoMode(990, 800), "SFML Test Window");
+    sf::Vector2u basesize = { 990,800 };
+    sf::RenderWindow window(sf::VideoMode(basesize.x, basesize.y), "SFML Test Window", sf::Style::Default);
+    window.setVisible(false);
+    sf::View view(sf::FloatRect(0, 0, basesize.x, basesize.y));
+    view.setCenter(basesize.x / 2.f, basesize.y / 2.f);
+    window.setView(view);
+
+    bool fullscreen = false;
+    
+    
      
     // To determine how many blocks we have to draw we divide the width and height by the tile size and add 1
     // First value of Grass/Water Group takes the texture, second and third starting x and y positions and fourth and fifth the area on which they should span
@@ -61,7 +103,7 @@ int main() {
     legHitbox.setFillColor(sf::Color::Transparent);
 
     //Clock npcTalkTime;
-
+    window.setVisible(true);
     // Main loop
     while (window.isOpen()) {
         Event event;
@@ -79,7 +121,12 @@ int main() {
                 npcShouldTalk = false;
                 soldier.shouldMove(true);
             }
+            if (event.type == sf::Event::Resized)
+                LetterBoxView(window, view, event.size.width, event.size.height);
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F11)
+                toggleFullscreen(window, fullscreen, view);
         }
+
 
         if (moveTime.getElapsedTime().asSeconds() > moveDelay) {
             //If key is pressed check which one is it
@@ -99,7 +146,7 @@ int main() {
         }
 
         // Clear the screen with black
-        window.clear(Color(105, 255, 255, 255)); // Clear old frame
+        window.clear(Color::Black); // Clear old frame
         window.draw(grassBlocks);
         window.draw(waterBlocks);
         rock.draw(window);
