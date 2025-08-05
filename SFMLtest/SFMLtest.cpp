@@ -17,8 +17,9 @@ bool npcShouldTalk = false;
 
 int main() {
     // Create a window with title and size
-    //std::cout << "Working directory is: " << filesystem::current_path() << std::endl;
-    RenderWindow window(sf::VideoMode(992, 800), "SFML Test Window");
+    //std::cout << "Working directory is: " << filesystem::current_path() << std::endl; 
+   
+    RenderWindow window(sf::VideoMode(990, 800), "SFML Test Window");
      
     // To determine how many blocks we have to draw we divide the width and height by the tile size and add 1
     // First value of Grass/Water Group takes the texture, second and third starting x and y positions and fourth and fifth the area on which they should span
