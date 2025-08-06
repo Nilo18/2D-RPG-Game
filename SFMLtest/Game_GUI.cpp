@@ -9,9 +9,9 @@ DialogueBox::DialogueBox(float width, float height, float positionX, float posit
 	if (!font.loadFromFile("assets/PixelifySans-Bold.ttf")) cerr << "Couldn't load font.";
 	if (!font1.loadFromFile("assets/PixelifySans-Regular.ttf")) cerr << "Couldn't load font.";
 	text1.setFont(font);
-	text1.setCharacterSize(36);
+	text1.setCharacterSize(24);
 	text2.setFont(font1);
-	text2.setCharacterSize(24);
+	text2.setCharacterSize(16);
 	FloatRect textBounds = text1.getLocalBounds();
 	text1.setPosition(box.getPosition().x + 15.f, box.getPosition().y + 15.f);
 	text2.setPosition(box.getPosition().x + 55.f, box.getPosition().y + 100.f);

@@ -2,6 +2,7 @@
 //#ifndef NATURE_H
 //#define NATURE_H
 #include <SFML/Graphics.hpp>
+#include <iostream>
 using namespace sf;
 using namespace std;
 
@@ -37,9 +38,11 @@ private:
 public:
     // We're using floats because setPosition takes floats plus it allows for smoother movement if ever needed
     GrassGroup(const string& texturePath, float startX, float startY, int rowsToSpan, int colsToSpan);
+    GrassGroup() = default;
     ~GrassGroup();
     const vector <Grass*>& getGrassTiles() const;
     virtual void draw(RenderTarget& target, RenderStates states) const override; // This method will be called internally when drawing the object
+    void regenerateTiles(const string& texturePath, float startX, float startY, int rowsToSpan, int colsToSpan);
 };
 
 class Water : public NatureObject {

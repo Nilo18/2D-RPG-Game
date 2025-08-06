@@ -6,7 +6,7 @@ const int TILES_Y = 800 / TILE_SIZE;
 // NatureObject base class methods
 NatureObject::NatureObject(const string& texturePath, int startX, int startY) {
     if (!texture.loadFromFile(texturePath)) {
-        throw runtime_error("Couldn't load a nature object.");
+        cerr<< "Couldn't load a nature object.";
     }
     sprite.setTexture(texture);
     this->startX = startX;
@@ -56,6 +56,20 @@ GrassGroup::~GrassGroup() {
 }
 
 const vector <Grass*>& GrassGroup::getGrassTiles() const { return grassTiles; }
+
+void GrassGroup::regenerateTiles(const string& texturePath, float startX, float startY, int rowsToSpan, int colsToSpan) {
+    for (auto* tile : grassTiles) {
+        delete tile;
+    }
+    grassTiles.clear();
+    for (int row = 0; row < rowsToSpan; row++) {
+        for (int col = 0; col < colsToSpan; col++) {
+            float x = startX + col * TILE_SIZE;
+            float y = startY + row * TILE_SIZE;
+            grassTiles.push_back(new Grass(texturePath, x, y));
+        }
+    }
+}
 
 // Water methods (1 block of water)
 Water::Water(const string& texturePath, int startX, int startY) : NatureObject(texturePath, startX, startY) {}

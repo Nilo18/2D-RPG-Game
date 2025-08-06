@@ -14,58 +14,76 @@ using namespace std::filesystem;
 const float moveDelay = 0.03f;
 const float npcTalkDuration = 5.f;
 bool npcShouldTalk = false;
+VideoMode desktop = VideoMode::getDesktopMode();
+GrassGroup grassBlocks("assets/grass2.png", 0, 0, desktop.height / TILE_SIZE + 1, desktop.width / TILE_SIZE + 1); // Globally declared grass block
  
 void LetterBoxView(sf::RenderWindow& window, sf::View& view, int wWidth, int wHeight) {
-    float windowRatio = (float)wWidth / wHeight;
-    float viewRatio = view.getSize().x / view.getSize().y;
-    float sizeX = 1.f, sizeY = 1.f;
-    float posX = 0.f, posY = 0.f;
+    float windowRatio = (float)wWidth / wHeight; // Ratio of the window
+    float viewRatio = view.getSize().x / view.getSize().y; // Ratio of the view
+    float sizeX = 1.f, sizeY = 1.f; // Spaces to cover horizontally and vertically
+    float posX = 0.f, posY = 0.f; // Starting positions
 
+    // If windowRatio is greater than the viewRatio, that means the width of the window has increased and caused the ratio to become bigger
     if (windowRatio > viewRatio)
     {
+        // In this case space to cover horizontally becomes viewRatio / windowRatio to keep the aspect ratio correct
         sizeX = viewRatio / windowRatio;
-        posX = (1 - sizeX)/2.f;
+        posX = (1 - sizeX)/2.f; // Also, the position should be centered horizontally by subtracting the new space to cover from the whole horizontal space / 2
     }
+    // If the viewRatio > windowRatio this means that the windowRatio has shrunk because height has increased
     else {
+        // In this case space to cover vertically becomes windowRatio / viewRatio to keep the aspect ratio correct
         sizeY = windowRatio / viewRatio;
-        posY = (1 - sizeY)/2.f;
+        posY = (1 - sizeY)/2.f; // The position should be centered vertically
     }
+    // The viewport should be set to the adjusted sizes and positions
     view.setViewport(sf::FloatRect(posX, posY, sizeX, sizeY));
-    window.setView(view);
+    window.setView(view); // The view should be set to the adjusted view
 }
 void toggleFullscreen(sf::RenderWindow& window, bool& fullscreen, sf::View& view) {
-    fullscreen = !fullscreen;
-    sf::Vector2u basesize(990, 880);  // Basic size of window
+    fullscreen = !fullscreen; // This line makes sure that both setting full screen and exiting it are run on the same button (F11)
+    sf::Vector2u windowedSize(990, 880);  // Basic size of window
 
+    VideoMode desktop = VideoMode::getDesktopMode();
+    // Close the window because we can't set fullscreen while it is open
     window.close();
+    // If the window is in full screen, use the desktop's resolution in fullscreen mode
     if (fullscreen)
-        window.create(sf::VideoMode::getDesktopMode(), "SFML", sf::Style::Fullscreen);
+        window.create(desktop, "SFML", sf::Style::Fullscreen);
+    // If it is not, use the base resolution
     else
-        window.create(sf::VideoMode(basesize.x, basesize.y), "SFML", sf::Style::Default);
+        window.create(sf::VideoMode(windowedSize.x, windowedSize.y), "SFML", sf::Style::Default);
     
-    view.setSize((float)basesize.x, (float)basesize.y);
-    view.setCenter(basesize.x / 2.f, basesize.y / 2.f);
-    window.setView(view);
+    Vector2u currentSize = window.getSize();
+    view.setSize(static_cast<float>(currentSize.x), static_cast<float>(currentSize.y)); // Set the size of the view to match the base size
+    view.setCenter(currentSize.x / 2.f, currentSize.y / 2.f); // Center the view
+    window.setView(view); // Set the adjusted view
 
-    LetterBoxView(window, view, window.getSize().x, window.getSize().y);
+    // Now the rows and columns to span will change because the screen size has changed
+    // This will regenerate the tiles according to the changed rows and columns to span
+    grassBlocks.regenerateTiles("assets/grass2.png", 0, 0, currentSize.y / TILE_SIZE + 1, currentSize.x / TILE_SIZE + 1);
+
+    // Adjusts the viewport rectangle in normalized window space to preserve the aspect ratio and add black bars if necessary. 
+    // It doesn’t move the camera; it changes how the view is mapped to the physical window.
+    //LetterBoxView(window, view, window.getSize().x, window.getSize().y);
 }
 int main() {
     // Create a window with title and size
     //std::cout << "Working directory is: " << filesystem::current_path() << std::endl; 
-    sf::Vector2u basesize = { 990,800 };
-    sf::RenderWindow window(sf::VideoMode(basesize.x, basesize.y), "SFML Test Window", sf::Style::Default);
-    window.setVisible(false);
-    sf::View view(sf::FloatRect(0, 0, basesize.x, basesize.y));
-    view.setCenter(basesize.x / 2.f, basesize.y / 2.f);
+    //sf::Vector2u basesize = { 990,800 };
+    //VideoMode desktop = VideoMode::getDesktopMode();
+    RenderWindow window(desktop, "SFML Test Window", Style::Fullscreen);
+    //window.setVisible(false);
+    View view;
+    view.setSize(static_cast<float>(desktop.width), static_cast<float>(desktop.height));
+    view.setCenter(desktop.width / 2.f, desktop.height / 2.f);
     window.setView(view);
 
-    bool fullscreen = false;
-    
-    
+    bool fullscreen = true;
      
     // To determine how many blocks we have to draw we divide the width and height by the tile size and add 1
     // First value of Grass/Water Group takes the texture, second and third starting x and y positions and fourth and fifth the area on which they should span
-    GrassGroup grassBlocks("assets/grass2.png", 0, 0, window.getSize().y / TILE_SIZE + 1, window.getSize().x / TILE_SIZE + 1);
+    //grassBlocks = GrassGroup("assets/grass2.png", 0, 0, window.getSize().y / TILE_SIZE + 1, window.getSize().x / TILE_SIZE + 1);
     WaterGroup waterBlocks("assets/water7.png", 0, 0, 3, 5);
     Rock rock("assets/rock2.png", 500, 500);
     Human soldier("assets/avtandila.png", 100, 250);
@@ -121,17 +139,21 @@ int main() {
                 npcShouldTalk = false;
                 soldier.shouldMove(true);
             }
-            if (event.type == sf::Event::Resized)
-                LetterBoxView(window, view, event.size.width, event.size.height);
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F11)
+            if (event.type == sf::Event::Resized) {
+                //LetterBoxView(window, view, event.size.width, event.size.height);
+                view.setSize(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
+                view.setCenter(event.size.width / 2.f, event.size.height / 2.f);
+                window.setView(view);
+            }
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F11) {
                 toggleFullscreen(window, fullscreen, view);
+            }
         }
-
 
         if (moveTime.getElapsedTime().asSeconds() > moveDelay) {
             //If key is pressed check which one is it
             if (Keyboard::isKeyPressed(Keyboard::A)) {
-                                                                                                                           soldier.moveLeft(rock, waterBlocks);
+                soldier.moveLeft(rock, waterBlocks);
             }
             if (Keyboard::isKeyPressed(Keyboard::D)) {
                 soldier.moveRight(rock, waterBlocks, window);
