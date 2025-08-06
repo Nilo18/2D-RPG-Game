@@ -144,6 +144,7 @@ int main() {
                 view.setSize(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
                 view.setCenter(event.size.width / 2.f, event.size.height / 2.f);
                 window.setView(view);
+                grassBlocks.regenerateTiles("assets/grass2.png", 0, 0, event.size.height / TILE_SIZE + 1, event.size.width / TILE_SIZE + 1);
             }
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F11) {
                 toggleFullscreen(window, fullscreen, view);
