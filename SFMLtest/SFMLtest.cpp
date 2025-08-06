@@ -131,7 +131,7 @@ int main() {
         if (moveTime.getElapsedTime().asSeconds() > moveDelay) {
             //If key is pressed check which one is it
             if (Keyboard::isKeyPressed(Keyboard::A)) {
-                soldier.moveLeft(rock, waterBlocks);
+                                                                                                                           soldier.moveLeft(rock, waterBlocks);
             }
             if (Keyboard::isKeyPressed(Keyboard::D)) {
                 soldier.moveRight(rock, waterBlocks, window);
