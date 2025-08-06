@@ -82,8 +82,8 @@ bool Human::infantryIsColliding(int offsetX, int offsetY, Rock& rock, WaterGroup
     else if (water != nullptr && nextBounds.intersects(water->getSprite().getGlobalBounds())) {
         return true;
     }
-    else if (waterBlocks.getWaterTiles().size() != 0) {
-        for (auto* waterBlock : waterBlocks.getWaterTiles()) {
+    else if (waterBlocks.getTiles().size() != 0) {
+        for (auto* waterBlock : waterBlocks.getTiles()) {
             if (nextBounds.intersects(waterBlock->getSprite().getGlobalBounds())) {
                 return true;
             }
