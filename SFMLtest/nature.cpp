@@ -25,13 +25,60 @@ CircleHitbox NatureObject::getCollisionBoxData() {
     return { 0, 0, 0 };
 }
 
-// Grass methods (one block)
-Grass::Grass(const string& texturePath, float startX, float startY) : NatureObject(texturePath, startX, startY) {}
+// Tile methods
+Tile::Tile(const string& texturePath, float startX, float startY) {
+    if (!texture.loadFromFile(texturePath)) {
+        cerr << "Couldn't load texture.";
+    }
+    sprite.setTexture(texture);
+    this->startX = startX;
+    this->startY = startY;
+    sprite.setPosition(startX, startY);
+}
 
-// Water methods (1 block of water)
-Water::Water(const string& texturePath, float startX, float startY) : NatureObject(texturePath, startX, startY) {}
+Tile::Tile() = default;
 
-//const Sprite& Water::getSprite() const { return waterSprite; }
+const Sprite& Tile::getSprite() const { return sprite; }
+
+// Tileset methods
+    // Methods have to be defined inside the class because templates require compile time definitions
+Tileset::Tileset(const string& texturePath, float startX, float startY, int rowsToSpan, int colsToSpan) {
+    for (int row = 0; row < rowsToSpan; row++) {
+        for (int col = 0; col < colsToSpan; col++) {
+            float x = startX + col * TILE_SIZE;
+            float y = startY + row * TILE_SIZE;
+            tiles.push_back(new Tile(texturePath, x, y));
+        }
+    }
+}
+
+Tileset::~Tileset() {
+    for (auto* tile : tiles) {
+        delete tile;
+    }
+}
+void Tileset::draw(RenderTarget& target, RenderStates states) const {
+    for (auto* tile : tiles) {
+        target.draw(tile->getSprite(), states);
+    }
+}
+const vector<Tile*>& Tileset::getTiles() const { return tiles; }
+// Method for regenerating the tiles after the rowsToSpan and colsToSpan (screen sizes) change
+void Tileset::regenerateTiles(const string& texturePath, float startX, float startY, int rowsToSpan, int colsToSpan) {
+    // Clear the previous tiles first
+    for (auto* tile : tiles) {
+        delete tile;
+    }
+    tiles.clear();
+    // Now regenerate
+    for (int row = 0; row < rowsToSpan; row++) {
+        for (int col = 0; col < colsToSpan; col++) {
+            float x = startX + col * TILE_SIZE;
+            float y = startY + row * TILE_SIZE;
+            tiles.push_back(new Tile(texturePath, x, y));
+        }
+    }
+}
 
 // Rock methods
 Rock::Rock(const string& texturePath, float startX, float startY) : NatureObject(texturePath, startX, startY) {}

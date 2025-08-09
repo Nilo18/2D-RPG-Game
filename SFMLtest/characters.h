@@ -27,12 +27,12 @@ private:
     bool shouldBeAbleToMove = true;
 public:
     Human(const string& texturePath, int startX, int startY);
-    void moveLeft(Rock& rock, WaterGroup& waterBlocks, Water* water = nullptr);
-    void moveRight(Rock& rock, WaterGroup& waterBlocks, RenderWindow& window, Water* water = nullptr);
-    void moveDown(Rock& rock, WaterGroup& waterBlocks, RenderWindow& window, Water* water = nullptr);
-    void moveUp(Rock& rock, WaterGroup& waterBlocks, Water* water = nullptr);
+    void moveLeft(Rock& rock, Tileset& waterBlocks, Tile* water = nullptr);
+    void moveRight(Rock& rock, Tileset& waterBlocks, RenderWindow& window, Tile* water = nullptr);
+    void moveDown(Rock& rock, Tileset& waterBlocks, RenderWindow& window, Tile* water = nullptr);
+    void moveUp(Rock& rock, Tileset& waterBlocks, Tile* water = nullptr);
     //void draw(RenderWindow& window) override;
-    bool infantryIsColliding(int offsetX, int offsetY, Rock& rock, WaterGroup& waterBlocks, Water* water = nullptr); // Take all collidable objects as parameters to check for each 
+    bool infantryIsColliding(int offsetX, int offsetY, Rock& rock, Tileset& waterBlocks, Tile* water = nullptr); // Take all collidable objects as parameters to check for each 
     FloatRect getCollisionBox() override; // We don't return by a const reference here because we're returning a temporary variable, created in the body
     FloatRect getLegHitbox();
     void shouldMove(bool val);

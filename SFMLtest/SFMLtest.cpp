@@ -15,8 +15,8 @@ const float moveDelay = 0.03f;
 const float npcTalkDuration = 5.f;
 bool npcShouldTalk = false;
 VideoMode desktop = VideoMode::getDesktopMode();
-GrassGroup grassBlocks("assets/grass2.png", 0, 0, desktop.height / TILE_SIZE + 1, desktop.width / TILE_SIZE + 1); // Globally declared grass block
-WaterGroup waterBlocks("assets/water7.png", 0, 0, 3, 5);
+Tileset grassBlocks("assets/grass2.png", 0, 0, desktop.height / TILE_SIZE + 1, desktop.width / TILE_SIZE + 1); // Globally declared grass block
+Tileset waterBlocks("assets/water7.png", 0, 0, 3, 5);
  
 void toggleFullscreen(sf::RenderWindow& window, bool& fullscreen, sf::View& view) {
     fullscreen = !fullscreen; // This line makes sure that both setting full screen and exiting it are run on the same button (F11)

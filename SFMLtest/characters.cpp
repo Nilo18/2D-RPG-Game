@@ -63,7 +63,7 @@ FloatRect Human::getLegHitbox() {
     return legsBox;
 }
 
-bool Human::infantryIsColliding(int offsetX, int offsetY, Rock& rock, WaterGroup& waterBlocks, Water* water) {
+bool Human::infantryIsColliding(int offsetX, int offsetY, Rock& rock, Tileset& waterBlocks, Tile* water) {
     FloatRect nextBounds = getCollisionBox();
     // Look ahead of the current position by the given offsets
     nextBounds.left += offsetX;
@@ -92,14 +92,14 @@ bool Human::infantryIsColliding(int offsetX, int offsetY, Rock& rock, WaterGroup
     return false;
 }
 
-void Human::moveLeft(Rock& rock, WaterGroup& waterBlocks, Water* water) {
+void Human::moveLeft(Rock& rock, Tileset& waterBlocks, Tile* water) {
     if (startX > 0 && !infantryIsColliding(-10, 0, rock, waterBlocks, water) && shouldBeAbleToMove) {
         startX -= 10;
         sprite.setPosition(startX, startY);
     }
 }
 
-void Human::moveRight(Rock& rock, WaterGroup& waterBlocks, RenderWindow& window, Water* water) {
+void Human::moveRight(Rock& rock, Tileset& waterBlocks, RenderWindow& window, Tile* water) {
     // Check if the character's right is colliding with the right edge of the window
     float rightEdge = window.getSize().x;
     float soldierRight = sprite.getPosition().x + sprite.getGlobalBounds().width;
@@ -109,7 +109,7 @@ void Human::moveRight(Rock& rock, WaterGroup& waterBlocks, RenderWindow& window,
     }
 }
 
-void Human::moveDown(Rock& rock, WaterGroup& waterBlocks, RenderWindow& window, Water* water) {
+void Human::moveDown(Rock& rock, Tileset& waterBlocks, RenderWindow& window, Tile* water) {
     // Check if the character's bottom is colliding with the bottom edge of the window
     float bottomEdge = window.getSize().y;
     float soldierBottom = sprite.getPosition().y + sprite.getGlobalBounds().height;
@@ -119,7 +119,7 @@ void Human::moveDown(Rock& rock, WaterGroup& waterBlocks, RenderWindow& window, 
     }
 }
 
-void Human::moveUp(Rock& rock, WaterGroup& waterBlocks, Water* water) {
+void Human::moveUp(Rock& rock, Tileset& waterBlocks, Tile* water) {
     if (startY > 0 && !infantryIsColliding(0, -10, rock, waterBlocks, water) && shouldBeAbleToMove) {
         startY -= 10;
         sprite.setPosition(startX, startY);
@@ -136,7 +136,7 @@ NPC::NPC(const string& texturePath, int startX, int startY) : Entity(texturePath
 // This is the talk function for NPCs
 void NPC::talk(RenderWindow& window, Human& player) {
     float bottomEdge = window.getSize().y;
-    DialogueBox dialogBox(window.getSize().x, window.getSize().y, 1.f, bottomEdge - 150.f, Color(0, 0, 0, 128), Color::Red);
+    DialogueBox dialogBox(window.getSize().x, bottomEdge, 0.f, bottomEdge - 150.f, Color(0, 0, 0, 128), Color::Red);
     dialogBox.setText( "Hello Adventurer \n ");
     dialogBox.addtext("Press Enter to continue ...");
 
