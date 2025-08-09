@@ -136,6 +136,7 @@
     <ClCompile Include="Game_GUI.cpp" />
     <ClCompile Include="nature.cpp" />
     <ClCompile Include="SFMLtest.cpp" />
+    <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Downloads\map.png">
@@ -149,6 +150,7 @@
     <ClInclude Include="characters.h" />
     <ClInclude Include="Game_GUI.h" />
     <ClInclude Include="nature.h" />
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

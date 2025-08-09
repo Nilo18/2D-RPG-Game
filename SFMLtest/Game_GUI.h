@@ -3,6 +3,9 @@
 #define GAME_GUI_H
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <sstream>
+#include <string>
+#include "utils.h"
 using namespace sf;
 using namespace std;
 

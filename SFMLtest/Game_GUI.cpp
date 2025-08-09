@@ -1,4 +1,5 @@
 #include "Game_GUI.h"
+Utilities utils;
 
 DialogueBox::DialogueBox(float width, float height, float positionX, float positionY, Color fillColor, Color outlineColor) {
 	box.setSize(Vector2f(width, height));
@@ -23,11 +24,13 @@ void DialogueBox::draw(RenderTarget& target, RenderStates states) const {
 	target.draw(text2, states);
 }
 
-void DialogueBox::setText(const string &txt) {
-   text1.setString(txt);
+void DialogueBox::setText(const string& txt) {
+	string wrappedText = utils.wrapBoxText(txt, font, box);
+    text1.setString(wrappedText);
 }
 
 void DialogueBox::addtext(const string& tx) {
-	text2.setString(tx);
+	string wrappedText = utils.wrapBoxText(tx, font1, box);
+	text2.setString(wrappedText);
 }
 

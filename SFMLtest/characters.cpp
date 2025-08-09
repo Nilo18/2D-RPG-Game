@@ -137,7 +137,7 @@ NPC::NPC(const string& texturePath, int startX, int startY) : Entity(texturePath
 void NPC::talk(RenderWindow& window, Human& player) {
     float bottomEdge = window.getSize().y;
     DialogueBox dialogBox(window.getSize().x, bottomEdge, 0.f, bottomEdge - 150.f, Color(0, 0, 0, 128), Color::Red);
-    dialogBox.setText( "Hello Adventurer \n ");
+    dialogBox.setText( "Hello Adventurer dksaksadffffss saddwwrr sddffffffffffllaaa ssddwrrttt fffgghhhhh fffgghhhhhfffgghhhhh fffgghhhhh fffgghhhhh fffgghhhhh fffgghhhhh");
     dialogBox.addtext("Press Enter to continue ...");
 
     window.draw(dialogBox);
