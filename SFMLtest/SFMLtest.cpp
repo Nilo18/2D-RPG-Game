@@ -8,6 +8,7 @@
 #include <filesystem>
 #include "nature.h"
 #include "characters.h"
+#include "structuress.h"
 using namespace sf;
 using namespace std;
 const float moveDelay = 0.03f;
@@ -17,7 +18,7 @@ VideoMode desktop = VideoMode::getDesktopMode();
 Tileset grassBlocks("assets/grass2.png", 0, 0, desktop.height / TILE_SIZE + 1, desktop.width / TILE_SIZE + 1); // Globally declared grass block
 Tileset waterBlocks("assets/water7.png", 0, 0, 3, 5);
  
-void toggleFullscreen(sf::RenderWindow& window, bool& fullscreen, sf::View& view) {
+static void toggleFullscreen(sf::RenderWindow& window, bool& fullscreen, sf::View& view) {
     fullscreen = !fullscreen; // This line makes sure that both setting full screen and exiting it are run on the same button (F11)
     sf::Vector2u windowedSize(990, 880);  // Basic size of window
 
@@ -54,8 +55,10 @@ int main() {
     // To determine how many blocks we have to draw we divide the width and height by the tile size and add 1
     // First value of Grass/Water Group takes the texture, second and third starting x and y positions and fourth and fifth the area on which they should span
     Rock rock("assets/rock2.png", 500, 500);
+    Structuress house(120, 600, "assets/HOUSe.png");
     Human soldier("assets/avtandila.png", 100, 250);
     NPC npc("assets/avtandila.png", 500, 0);
+    NPC npc1("assets/avtandila.png", 700, 0);
     npc.setScale(2.f, 2.f);
     soldier.setScale(2.f, 2.f);  // doubles width and height
 
@@ -143,6 +146,7 @@ int main() {
         window.draw(grassBlocks);
         window.draw(waterBlocks);
         rock.draw(window);
+        house.DrawBuilding(window);
         //window.draw(debugBox);
         soldier.draw(window);
         npc.draw(window);

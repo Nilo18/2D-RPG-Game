@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="structuress.cpp" />
     <ClCompile Include="characters.cpp" />
     <ClCompile Include="Game_GUI.cpp" />
     <ClCompile Include="nature.cpp" />
@@ -147,6 +148,7 @@
     <Text Include="..\..\..\..\Downloads\tilemap.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="structuress.h" />
     <ClInclude Include="characters.h" />
     <ClInclude Include="Game_GUI.h" />
     <ClInclude Include="nature.h" />
