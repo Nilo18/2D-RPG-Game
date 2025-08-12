@@ -29,5 +29,13 @@ namespace utilities {
 
 		return wrappedText;
 	}
+
+	void styleWidget(RectangleShape& shape, const WidgetStyle& style) {
+		shape.setSize(style.size);
+		shape.setPosition(style.position);
+		shape.setFillColor(style.fillColor);
+		shape.setOutlineColor(style.outlineColor);
+		shape.setOutlineThickness(style.outlineThickness);
+	}
 };
 

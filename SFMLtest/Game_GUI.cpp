@@ -1,11 +1,8 @@
 #include "Game_GUI.h"
 
 DialogueBox::DialogueBox(float width, float height, float positionX, float positionY, Color fillColor, Color outlineColor) {
-	box.setSize(Vector2f(width, height));
-	box.setPosition(positionX, positionY);
-	box.setFillColor(fillColor);
-	box.setOutlineColor(outlineColor);
-	box.setOutlineThickness(this->outlineThickness);
+	utilities::WidgetStyle style{ { width, height }, { positionX, positionY }, fillColor, outlineColor, outlineThickness }; // Define the styling of a widget
+	utilities::styleWidget(box, style); // Pass these styles to styleWidget to apply them
 	if (!boldPixelSans.loadFromFile("assets/PixelifySans-Bold.ttf")) cerr << "Couldn't load font.";
 	if (!regularPixelSans.loadFromFile("assets/PixelifySans-Regular.ttf")) cerr << "Couldn't load font.";
 	mainText.setFont(boldPixelSans);

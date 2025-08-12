@@ -132,7 +132,7 @@ NPC::NPC(const string& texturePath, int startX, int startY) : Entity(texturePath
 // This is the talk function for NPCs
 void NPC::talk(RenderWindow& window, Human& player) {
     float bottomEdge = window.getSize().y;
-    DialogueBox dialogBox(window.getSize().x, 450.f, 0.f, bottomEdge - 450.f, Color(0, 0, 0, 128), Color::Red);
+    DialogueBox dialogBox(window.getSize().x, 250.f, 0.f, bottomEdge - 250.f, Color(0, 0, 0, 128), Color::Red);
     dialogBox.setTitle("Tutorial NPC");
     dialogBox.setText("Hello Adventurer!");
     dialogBox.addCaption("Press Enter to continue...");
