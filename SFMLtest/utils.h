@@ -7,11 +7,9 @@
 using namespace std;
 using namespace sf;
 
-// This class will store all the utility functions like wrapping text
-class Utilities {
-public:
-	Utilities();
-	string wrapBoxText(const string& initialText, const Font& font, const RectangleShape& box) const; // Method for dialog box text
+// This namespace will store all the utility functions like wrapping text
+namespace utilities {
+	string wrapBoxText(const string& initialText, const Font& font, const RectangleShape& box); // Method for dialog box text
 };
 
 #endif

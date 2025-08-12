@@ -63,6 +63,7 @@ void Tileset::draw(RenderTarget& target, RenderStates states) const {
     }
 }
 const vector<Tile*>& Tileset::getTiles() const { return tiles; }
+
 // Method for regenerating the tiles after the rowsToSpan and colsToSpan (screen sizes) change
 void Tileset::regenerateTiles(const string& texturePath, float startX, float startY, int rowsToSpan, int colsToSpan) {
     // Clear the previous tiles first

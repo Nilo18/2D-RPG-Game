@@ -49,10 +49,9 @@ public:
 
 // Base class for every type of tileset
 class Tileset : public Drawable {
-protected:
+private:
     vector<Tile*> tiles;
 public:
-    // Methods have to be defined inside the class because templates require compile time definitions
     Tileset(const string& texturePath, float startX, float startY, int rowsToSpan, int colsToSpan);
     ~Tileset();
     virtual void draw(RenderTarget& target, RenderStates states) const override;

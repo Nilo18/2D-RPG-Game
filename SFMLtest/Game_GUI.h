@@ -9,18 +9,18 @@
 using namespace sf;
 using namespace std;
 
-
 class DialogueBox : public Drawable {
 private:
 	RectangleShape box;
-	Text text1,text2,text3;
-	Font font ,font1;
+	Text mainText,caption,title; // caption is for notes like "Press Enter to continue" and title is to determine who's speaking
+	Font boldPixelSans, regularPixelSans;
 	float outlineThickness = 2.0f;
 public:
 	DialogueBox(float width, float height, float positionX, float positionY, Color fillColor, Color outlineColor);
 	virtual void draw(RenderTarget& target, RenderStates states) const override; // Overriden draw method from Drawable to make this custom class drawable
+	void setTitle(const string& title);
 	void setText(const string & txt);
-	void addtext(const string& tx);
+	void addCaption(const string& tx);
 };
 
 #endif

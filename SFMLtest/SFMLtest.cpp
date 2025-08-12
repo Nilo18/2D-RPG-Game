@@ -10,7 +10,6 @@
 #include "characters.h"
 using namespace sf;
 using namespace std;
-using namespace std::filesystem;
 const float moveDelay = 0.03f;
 const float npcTalkDuration = 5.f;
 bool npcShouldTalk = false;

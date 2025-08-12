@@ -1,5 +1,4 @@
 #include "Game_GUI.h"
-Utilities utils;
 
 DialogueBox::DialogueBox(float width, float height, float positionX, float positionY, Color fillColor, Color outlineColor) {
 	box.setSize(Vector2f(width, height));
@@ -7,30 +6,45 @@ DialogueBox::DialogueBox(float width, float height, float positionX, float posit
 	box.setFillColor(fillColor);
 	box.setOutlineColor(outlineColor);
 	box.setOutlineThickness(this->outlineThickness);
-	if (!font.loadFromFile("assets/PixelifySans-Bold.ttf")) cerr << "Couldn't load font.";
-	if (!font1.loadFromFile("assets/PixelifySans-Regular.ttf")) cerr << "Couldn't load font.";
-	text1.setFont(font);
-	text1.setCharacterSize(24);
-	text2.setFont(font1);
-	text2.setCharacterSize(16);
-	FloatRect textBounds = text1.getLocalBounds();
-	text1.setPosition(box.getPosition().x + 15.f, box.getPosition().y + 15.f);
-	text2.setPosition(box.getPosition().x + 55.f, box.getPosition().y + 100.f);
+	if (!boldPixelSans.loadFromFile("assets/PixelifySans-Bold.ttf")) cerr << "Couldn't load font.";
+	if (!regularPixelSans.loadFromFile("assets/PixelifySans-Regular.ttf")) cerr << "Couldn't load font.";
+	mainText.setFont(boldPixelSans);
+	mainText.setCharacterSize(24);
+	FloatRect textBounds = mainText.getLocalBounds();
+	mainText.setPosition(box.getPosition().x + 15.f, box.getPosition().y + 35.f);
+	title.setFont(boldPixelSans);
+	title.setCharacterSize(18);
+	title.setPosition(box.getPosition().x + 15.f, box.getPosition().y);
 }
 
 void DialogueBox::draw(RenderTarget& target, RenderStates states) const {
 	target.draw(box, states);
-	target.draw(text1, states);
-	target.draw(text2, states);
+	target.draw(title, states);
+	target.draw(mainText, states);
+	target.draw(caption, states);
+}
+
+void DialogueBox::setTitle(const string& title) {
+	string wrappedTitle = utilities::wrapBoxText(title, regularPixelSans, box);
+	this->title.setString(title);
 }
 
 void DialogueBox::setText(const string& txt) {
-	string wrappedText = utils.wrapBoxText(txt, font, box);
-    text1.setString(wrappedText);
+	string wrappedText = utilities::wrapBoxText(txt, boldPixelSans, box);
+	mainText.setString(wrappedText);
 }
 
-void DialogueBox::addtext(const string& tx) {
-	string wrappedText = utils.wrapBoxText(tx, font1, box);
-	text2.setString(wrappedText);
+void DialogueBox::addCaption(const string& tx) {
+	string wrappedCaption = utilities::wrapBoxText(tx, regularPixelSans, box);
+	caption.setString(wrappedCaption);
+	caption.setFont(regularPixelSans);
+	caption.setCharacterSize(16);
+	float boxBottomY = box.getPosition().y + box.getSize().y; // Calculate the bottom edge of the box by adding height to the y position
+	float bottomPadding = 15.f; // Define the padding for the caption
+	FloatRect captionBounds = caption.getLocalBounds(); // Get caption local bounds
+	// Set the caption’s origin to (0, captionBounds.top + captionBounds.height) so its coordinate system anchors at the bottom-left of the visible text
+	caption.setOrigin(0.f, captionBounds.top + captionBounds.height);
+	// set the caption to box's x position and bottom edge of the box - bottom padding which makes sure the caption is inside the box
+	caption.setPosition(box.getPosition().x + 55.f, boxBottomY - bottomPadding); 
 }
 

@@ -126,19 +126,16 @@ void Human::moveUp(Rock& rock, Tileset& waterBlocks, Tile* water) {
     }
 }
 
-//void Human::draw(RenderWindow& window) {
-//    window.draw(sprite);
-//}
-
 // Functions related to NPC
 NPC::NPC(const string& texturePath, int startX, int startY) : Entity(texturePath, startX, startY) {}
 
 // This is the talk function for NPCs
 void NPC::talk(RenderWindow& window, Human& player) {
     float bottomEdge = window.getSize().y;
-    DialogueBox dialogBox(window.getSize().x, bottomEdge, 0.f, bottomEdge - 150.f, Color(0, 0, 0, 128), Color::Red);
-    dialogBox.setText( "Hello Adventurer dksaksadffffss saddwwrr sddffffffffffllaaa ssddwrrttt fffgghhhhh fffgghhhhhfffgghhhhh fffgghhhhh fffgghhhhh fffgghhhhh fffgghhhhh");
-    dialogBox.addtext("Press Enter to continue ...");
+    DialogueBox dialogBox(window.getSize().x, 450.f, 0.f, bottomEdge - 450.f, Color(0, 0, 0, 128), Color::Red);
+    dialogBox.setTitle("Tutorial NPC");
+    dialogBox.setText("Hello Adventurer!");
+    dialogBox.addCaption("Press Enter to continue...");
 
     window.draw(dialogBox);
 }
