@@ -4,18 +4,20 @@
 using namespace std;
 using namespace sf;
 
-class Structuress {
+class Structure {
 private:
 	int P_x, P_y;
 	Sprite building;
 	Texture building_texture;
 public:
-	 Structuress()=default;
-	 Structuress(int,int,const string &B);
+	 Structure()=default;
+	 Structure(int,int,const string &B);
 	 void DrawBuilding(RenderWindow&window);
-
+	 virtual FloatRect getCollisionBox(); // Keep it virtual so other objects can override it to fit their own sizes
+	 const Sprite& getSprite() const { return building; }
 };
-class obstacles: public Structuress{
+
+class obstacles: public Structure {
 public:
 	obstacles( float& x, float& y, Sprite& ob, Texture& OB);
 	void drawobstacle(RenderWindow& window);

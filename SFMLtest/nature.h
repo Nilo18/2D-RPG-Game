@@ -3,6 +3,7 @@
 //#define NATURE_H
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "utils.h"
 using namespace sf;
 using namespace std;
 
@@ -28,7 +29,9 @@ protected:
 public:
     NatureObject(const string& texturePath, float startX, float startY);
     const Sprite& getSprite() const;
+    // This is normal rectangular hitbox for normal objects
     virtual FloatRect getCollisionBox(); // We don't return by a const reference here because we're returning a temporary variable, created in the body
+    // This is circle hitbox for round objects
     virtual CircleHitbox getCollisionBoxData();
     virtual void draw(RenderWindow& window);
 };

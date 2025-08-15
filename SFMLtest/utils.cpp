@@ -37,5 +37,25 @@ namespace utilities {
 		shape.setOutlineColor(style.outlineColor);
 		shape.setOutlineThickness(style.outlineThickness);
 	}
+
+	//template <typename T>
+	//void initializeObject(const string& texturePath, T& object, float givenX, float givenY) {
+	//	//if (!objectProps.texture.loadFromFile(texturePath)) {
+	//	//	throw runtime_error("Couldn't load texture");
+	//	//}
+	//	//objectProps.sprite.setTexture(objectProps.texture);
+	//	//objectProps.objectX = objectProps.givenX;
+	//	//objectProps.objectY = objectProps.givenY;
+	//	//cout << objectProps.objectX << " " << objectProps.objectY << endl;
+	//	//objectProps.sprite.setPosition(objectProps.objectX, objectProps.objectY);
+	//	if (!object.texture.loadFromFile(texturePath)) {
+	//		throw runtime_error("Couldn't load file");
+	//	}
+	//	object.sprite.setTexture(object.texture);
+	//	object.getX() = givenX;
+	//	object.getY() = givenY;
+	//	object.sprite.setPosition(object.startX, object.startY);
+
+	//}
 };
 

@@ -18,11 +18,11 @@ void NatureObject::draw(RenderWindow& window) {
 const Sprite& NatureObject::getSprite() const { return sprite; }
 
 FloatRect NatureObject::getCollisionBox() {
-    return sprite.getGlobalBounds();
+    return sprite.getGlobalBounds(); // Returns sprite's global bounds on default
 }
 
 CircleHitbox NatureObject::getCollisionBoxData() {
-    return { 0, 0, 0 };
+    return { 0, 0, 0 }; // Returns 0s on default
 }
 
 // Tile methods

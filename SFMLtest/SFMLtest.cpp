@@ -55,10 +55,17 @@ int main() {
     // To determine how many blocks we have to draw we divide the width and height by the tile size and add 1
     // First value of Grass/Water Group takes the texture, second and third starting x and y positions and fourth and fifth the area on which they should span
     Rock rock("assets/rock2.png", 500, 500);
-    Structuress house(120, 600, "assets/HOUSe.png");
-    Human soldier("assets/avtandila.png", 100, 250);
-    NPC npc("assets/avtandila.png", 500, 0);
-    NPC npc1("assets/avtandila.png", 700, 0);
+    Structure house(120, 600, "assets/HOUSe.png");
+    FloatRect houseHitbox = house.getCollisionBox();
+    RectangleShape houseBox;
+    houseBox.setPosition(houseHitbox.left, houseHitbox.top);
+    houseBox.setSize({ houseHitbox.width, houseHitbox.height });
+    houseBox.setOutlineColor(Color::Blue);
+    houseBox.setFillColor(Color::Transparent);
+    houseBox.setOutlineThickness(1.f);
+    Human soldier("assets/avtandila.png", 100.f, 250.f);
+    NPC npc("assets/avtandila.png", 500.f, 0.0f);
+    NPC npc1("assets/avtandila.png", 700.f, 0.0f);
     npc.setScale(2.f, 2.f);
     soldier.setScale(2.f, 2.f);  // doubles width and height
 
@@ -127,16 +134,16 @@ int main() {
         if (moveTime.getElapsedTime().asSeconds() > moveDelay) {
             //If key is pressed check which one is it
             if (Keyboard::isKeyPressed(Keyboard::A)) {
-                soldier.moveLeft(rock, waterBlocks);
+                soldier.moveLeft(rock, waterBlocks, house);
             }
             if (Keyboard::isKeyPressed(Keyboard::D)) {
-                soldier.moveRight(rock, waterBlocks, window);
+                soldier.moveRight(rock, waterBlocks, window, house);
             }
             if (Keyboard::isKeyPressed(Keyboard::S)) {
-                soldier.moveDown(rock, waterBlocks, window);
+                soldier.moveDown(rock, waterBlocks, window, house);
             }
             if (Keyboard::isKeyPressed(Keyboard::W)) {
-                soldier.moveUp(rock, waterBlocks);
+                soldier.moveUp(rock, waterBlocks, house);
             }
             moveTime.restart();
         }
@@ -149,6 +156,7 @@ int main() {
         house.DrawBuilding(window);
         //window.draw(debugBox);
         soldier.draw(window);
+        window.draw(houseBox);
         npc.draw(window);
         //window.draw(soldierBox);
         //window.draw(legHitbox);

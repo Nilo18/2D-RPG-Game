@@ -3,6 +3,7 @@
 #define CHARACTERS_H
 #include <SFML/Graphics.hpp>
 #include "nature.h"
+#include "structuress.h"
 #include <iostream>
 #include "Game_GUI.h"
 using namespace sf;
@@ -13,11 +14,11 @@ class Entity {
 protected:
     Sprite sprite;
     Texture texture;
-    int startX;
-    int startY;
+    float startX;
+    float startY;
 public:
-    Entity(const string& texturePath, int startX, int startY);
-    virtual FloatRect getCollisionBox();
+    Entity(const string& texturePath, float startX, float startY);
+    virtual FloatRect getCollisionBox(); 
     void setScale(float scaleX, float scaleY);
     virtual void draw(RenderWindow& window);
 };
@@ -26,13 +27,14 @@ class Human : public Entity {
 private:
     bool shouldBeAbleToMove = true;
 public:
-    Human(const string& texturePath, int startX, int startY);
-    void moveLeft(Rock& rock, Tileset& waterBlocks, Tile* water = nullptr);
-    void moveRight(Rock& rock, Tileset& waterBlocks, RenderWindow& window, Tile* water = nullptr);
-    void moveDown(Rock& rock, Tileset& waterBlocks, RenderWindow& window, Tile* water = nullptr);
-    void moveUp(Rock& rock, Tileset& waterBlocks, Tile* water = nullptr);
+    Human(const string& texturePath, float startX, float startY);
+    void moveLeft(Rock& rock, Tileset& waterBlocks, Structure& str, Tile* water = nullptr);
+    void moveRight(Rock& rock, Tileset& waterBlocks, RenderWindow& window, Structure& str, Tile* water = nullptr);
+    void moveDown(Rock& rock, Tileset& waterBlocks, RenderWindow& window, Structure& str, Tile* water = nullptr);
+    void moveUp(Rock& rock, Tileset& waterBlocks, Structure& str, Tile* water = nullptr);
     //void draw(RenderWindow& window) override;
-    bool infantryIsColliding(int offsetX, int offsetY, Rock& rock, Tileset& waterBlocks, Tile* water = nullptr); // Take all collidable objects as parameters to check for each 
+    // Default values must be the last parameters, or all of the following parameters after it must also be default
+    bool infantryIsColliding(int offsetX, int offsetY, Rock& rock, Tileset& waterBlocks, Structure& str, Tile* water = nullptr); // Take all collidable objects as parameters to check for each 
     FloatRect getCollisionBox() override; // We don't return by a const reference here because we're returning a temporary variable, created in the body
     FloatRect getLegHitbox();
     void shouldMove(bool val);
@@ -44,7 +46,7 @@ class NPC : public Entity {
 private:
 //    Font font;
 public:
-    NPC(const string& texturePath, int startX, int startY);
+    NPC(const string& texturePath, float startX, float startY);
     void talk(RenderWindow& window, Human& player);
 };
 

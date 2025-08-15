@@ -1,7 +1,7 @@
 #include "characters.h"
 
 // Functions related to Entity base class
-Entity::Entity(const string& texturePath, int startX, int startY) {
+Entity::Entity(const string& texturePath, float startX, float startY) {
     if (!texture.loadFromFile(texturePath)) {
         throw runtime_error("Couldn't load texture.");
     }
@@ -35,7 +35,7 @@ bool circleIntersectsRect(float cx, float cy, float radius, const FloatRect& rec
 }
 
 // Functions related to Human
-Human::Human(const string& texturePath, int startX, int startY) : Entity(texturePath, startX, startY) {}
+Human::Human(const string& texturePath, float startX, float startY) : Entity(texturePath, startX, startY) {}
 
 void Human::shouldMove(bool val) {
     shouldBeAbleToMove = val;
@@ -63,9 +63,8 @@ FloatRect Human::getLegHitbox() {
     return legsBox;
 }
 
-bool Human::infantryIsColliding(int offsetX, int offsetY, Rock& rock, Tileset& waterBlocks, Tile* water) {
+bool Human::infantryIsColliding(int offsetX, int offsetY, Rock& rock, Tileset& waterBlocks, Structure& str, Tile* water) {
     FloatRect nextBounds = getCollisionBox();
-    // Look ahead of the current position by the given offsets
     nextBounds.left += offsetX;
     nextBounds.top += offsetY;
 
@@ -75,63 +74,72 @@ bool Human::infantryIsColliding(int offsetX, int offsetY, Rock& rock, Tileset& w
 
     CircleHitbox rockHitbox = rock.getCollisionBoxData();
 
+    //cout << str;
+
     if (circleIntersectsRect(rockHitbox.centerX, rockHitbox.centerY, rockHitbox.radius, nextBounds) ||
         circleIntersectsRect(rockHitbox.centerX, rockHitbox.centerY, rockHitbox.radius, legsBox)) {
         return true;
     }
+    // Note: If one of the else ifs is evaluated as true the rest will be skipped
     else if (water != nullptr && nextBounds.intersects(water->getSprite().getGlobalBounds())) {
         return true;
     }
-    else if (waterBlocks.getTiles().size() != 0) {
-        for (auto* waterBlock : waterBlocks.getTiles()) {
-            if (nextBounds.intersects(waterBlock->getSprite().getGlobalBounds())) {
-                return true;
-            }
+    else if (nextBounds.intersects(str.getSprite().getGlobalBounds())) {
+        return true;
+    }
+
+    
+    for (auto* waterBlock : waterBlocks.getTiles()) {
+        if (nextBounds.intersects(waterBlock->getSprite().getGlobalBounds())) {
+            return true;
         }
     }
+
     return false;
 }
 
-void Human::moveLeft(Rock& rock, Tileset& waterBlocks, Tile* water) {
-    if (startX > 0 && !infantryIsColliding(-10, 0, rock, waterBlocks, water) && shouldBeAbleToMove) {
+void Human::moveLeft(Rock& rock, Tileset& waterBlocks, Structure& str, Tile* water) {
+    if (startX > 0 && !infantryIsColliding(-10, 0, rock, waterBlocks, str, water) && shouldBeAbleToMove) {
         startX -= 10;
         sprite.setPosition(startX, startY);
     }
 }
 
-void Human::moveRight(Rock& rock, Tileset& waterBlocks, RenderWindow& window, Tile* water) {
+void Human::moveRight(Rock& rock, Tileset& waterBlocks, RenderWindow& window, Structure& str, Tile* water) {
     // Check if the character's right is colliding with the right edge of the window
-    float rightEdge = window.getSize().x;
+    // getSize().x returns an unsigned int, since this variable isn't used to perform calculations, no need to save it is a float
+    unsigned int rightEdge = window.getSize().x; 
     float soldierRight = sprite.getPosition().x + sprite.getGlobalBounds().width;
-    if (soldierRight <= rightEdge && !infantryIsColliding(10, 0, rock, waterBlocks, water) && shouldBeAbleToMove) {
+    if (soldierRight <= rightEdge && !infantryIsColliding(10, 0, rock, waterBlocks, str, water) && shouldBeAbleToMove) {
         startX += 10;
         sprite.setPosition(startX, startY);
     }
 }
 
-void Human::moveDown(Rock& rock, Tileset& waterBlocks, RenderWindow& window, Tile* water) {
+void Human::moveDown(Rock& rock, Tileset& waterBlocks, RenderWindow& window, Structure& str, Tile* water) {
     // Check if the character's bottom is colliding with the bottom edge of the window
-    float bottomEdge = window.getSize().y;
+    // getSize().x returns an unsigned int, since this variable isn't used to perform calculations, no need to save it is a float
+    unsigned int bottomEdge = window.getSize().y;
     float soldierBottom = sprite.getPosition().y + sprite.getGlobalBounds().height;
-    if (soldierBottom <= bottomEdge && !infantryIsColliding(0, 10, rock, waterBlocks, water) && shouldBeAbleToMove) {
+    if (soldierBottom <= bottomEdge && !infantryIsColliding(0, 10, rock, waterBlocks, str, water) && shouldBeAbleToMove) {
         startY += 10;
         sprite.setPosition(startX, startY);
     }
 }
 
-void Human::moveUp(Rock& rock, Tileset& waterBlocks, Tile* water) {
-    if (startY > 0 && !infantryIsColliding(0, -10, rock, waterBlocks, water) && shouldBeAbleToMove) {
+void Human::moveUp(Rock& rock, Tileset& waterBlocks, Structure& str, Tile* water) {
+    if (startY > 0 && !infantryIsColliding(0, -10, rock, waterBlocks, str, water) && shouldBeAbleToMove) {
         startY -= 10;
         sprite.setPosition(startX, startY);
     }
 }
 
 // Functions related to NPC
-NPC::NPC(const string& texturePath, int startX, int startY) : Entity(texturePath, startX, startY) {}
+NPC::NPC(const string& texturePath, float startX, float startY) : Entity(texturePath, startX, startY) {}
 
 // This is the talk function for NPCs
 void NPC::talk(RenderWindow& window, Human& player) {
-    float bottomEdge = window.getSize().y;
+    unsigned int bottomEdge = window.getSize().y; 
     DialogueBox dialogBox(window.getSize().x, 250.f, 0.f, bottomEdge - 250.f, Color(0, 0, 0, 128), Color::Red);
     dialogBox.setTitle("Tutorial NPC");
     dialogBox.setText("Hello Adventurer!");
