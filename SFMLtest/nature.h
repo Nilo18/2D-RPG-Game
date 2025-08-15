@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "utils.h"
+#include <memory>
 using namespace sf;
 using namespace std;
 
@@ -53,12 +54,11 @@ public:
 // Base class for every type of tileset
 class Tileset : public Drawable {
 private:
-    vector<Tile*> tiles;
+    vector<unique_ptr<Tile>> tiles;
 public:
     Tileset(const string& texturePath, float startX, float startY, int rowsToSpan, int colsToSpan);
-    ~Tileset();
     virtual void draw(RenderTarget& target, RenderStates states) const override;
-    const vector<Tile*>& getTiles() const;
+    const vector<unique_ptr<Tile>>& getTiles() const;
     // Method for regenerating the tiles after the rowsToSpan and colsToSpan (screen sizes) change
     void regenerateTiles(const string& texturePath, float startX, float startY, int rowsToSpan, int colsToSpan);
 };

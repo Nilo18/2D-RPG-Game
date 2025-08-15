@@ -41,42 +41,33 @@ Tile::Tile() = default;
 const Sprite& Tile::getSprite() const { return sprite; }
 
 // Tileset methods
-    // Methods have to be defined inside the class because templates require compile time definitions
 Tileset::Tileset(const string& texturePath, float startX, float startY, int rowsToSpan, int colsToSpan) {
     for (int row = 0; row < rowsToSpan; row++) {
         for (int col = 0; col < colsToSpan; col++) {
             float x = startX + col * TILE_SIZE;
             float y = startY + row * TILE_SIZE;
-            tiles.push_back(new Tile(texturePath, x, y));
+            tiles.push_back(make_unique<Tile>(texturePath, x, y));
         }
     }
 }
 
-Tileset::~Tileset() {
-    for (auto* tile : tiles) {
-        delete tile;
-    }
-}
 void Tileset::draw(RenderTarget& target, RenderStates states) const {
-    for (auto* tile : tiles) {
+    for (const auto& tile : tiles) {
         target.draw(tile->getSprite(), states);
     }
 }
-const vector<Tile*>& Tileset::getTiles() const { return tiles; }
+const vector<unique_ptr<Tile>>& Tileset::getTiles() const { return tiles; }
 
 // Method for regenerating the tiles after the rowsToSpan and colsToSpan (screen sizes) change
 void Tileset::regenerateTiles(const string& texturePath, float startX, float startY, int rowsToSpan, int colsToSpan) {
     // Clear the previous tiles first
-    for (auto* tile : tiles) {
-        delete tile;
-    }
     tiles.clear();
     // Now regenerate
     for (int row = 0; row < rowsToSpan; row++) {
         for (int col = 0; col < colsToSpan; col++) {
             float x = startX + col * TILE_SIZE;
             float y = startY + row * TILE_SIZE;
-            tiles.push_back(new Tile(texturePath, x, y));
+            tiles.push_back(make_unique<Tile>(texturePath, x, y));
         }
     }
 }

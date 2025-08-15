@@ -74,8 +74,6 @@ bool Human::infantryIsColliding(int offsetX, int offsetY, Rock& rock, Tileset& w
 
     CircleHitbox rockHitbox = rock.getCollisionBoxData();
 
-    //cout << str;
-
     if (circleIntersectsRect(rockHitbox.centerX, rockHitbox.centerY, rockHitbox.radius, nextBounds) ||
         circleIntersectsRect(rockHitbox.centerX, rockHitbox.centerY, rockHitbox.radius, legsBox)) {
         return true;
@@ -89,7 +87,7 @@ bool Human::infantryIsColliding(int offsetX, int offsetY, Rock& rock, Tileset& w
     }
 
     if (waterBlocks.getTiles().size() != 0) {
-        for (auto* waterBlock : waterBlocks.getTiles()) {
+        for (const auto& waterBlock : waterBlocks.getTiles()) {
             if (nextBounds.intersects(waterBlock->getSprite().getGlobalBounds())) {
                 return true;
             }
