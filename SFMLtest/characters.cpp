@@ -63,7 +63,7 @@ FloatRect Human::getLegHitbox() {
     return legsBox;
 }
 
-bool Human::infantryIsColliding(int offsetX, int offsetY, Rock& rock, Tileset& waterBlocks, Structure& str, Tile* water) {
+bool Human::infantryIsColliding(int offsetX, int offsetY, Rock& rock, Tileset& waterBlocks, House& house, Tile* water) {
     FloatRect nextBounds = getCollisionBox();
     nextBounds.left += offsetX;
     nextBounds.top += offsetY;
@@ -84,51 +84,52 @@ bool Human::infantryIsColliding(int offsetX, int offsetY, Rock& rock, Tileset& w
     else if (water != nullptr && nextBounds.intersects(water->getSprite().getGlobalBounds())) {
         return true;
     }
-    else if (nextBounds.intersects(str.getSprite().getGlobalBounds())) {
+    else if (nextBounds.intersects(house.getCollisionBox())) {
         return true;
     }
 
-    
-    for (auto* waterBlock : waterBlocks.getTiles()) {
-        if (nextBounds.intersects(waterBlock->getSprite().getGlobalBounds())) {
-            return true;
+    if (waterBlocks.getTiles().size() != 0) {
+        for (auto* waterBlock : waterBlocks.getTiles()) {
+            if (nextBounds.intersects(waterBlock->getSprite().getGlobalBounds())) {
+                return true;
+            }
         }
     }
 
     return false;
 }
 
-void Human::moveLeft(Rock& rock, Tileset& waterBlocks, Structure& str, Tile* water) {
-    if (startX > 0 && !infantryIsColliding(-10, 0, rock, waterBlocks, str, water) && shouldBeAbleToMove) {
+void Human::moveLeft(Rock& rock, Tileset& waterBlocks, House& house, Tile* water) {
+    if (startX > 0 && !infantryIsColliding(-10, 0, rock, waterBlocks, house, water) && shouldBeAbleToMove) {
         startX -= 10;
         sprite.setPosition(startX, startY);
     }
 }
 
-void Human::moveRight(Rock& rock, Tileset& waterBlocks, RenderWindow& window, Structure& str, Tile* water) {
+void Human::moveRight(Rock& rock, Tileset& waterBlocks, RenderWindow& window, House& house, Tile* water) {
     // Check if the character's right is colliding with the right edge of the window
     // getSize().x returns an unsigned int, since this variable isn't used to perform calculations, no need to save it is a float
     unsigned int rightEdge = window.getSize().x; 
     float soldierRight = sprite.getPosition().x + sprite.getGlobalBounds().width;
-    if (soldierRight <= rightEdge && !infantryIsColliding(10, 0, rock, waterBlocks, str, water) && shouldBeAbleToMove) {
+    if (soldierRight <= rightEdge && !infantryIsColliding(10, 0, rock, waterBlocks, house, water) && shouldBeAbleToMove) {
         startX += 10;
         sprite.setPosition(startX, startY);
     }
 }
 
-void Human::moveDown(Rock& rock, Tileset& waterBlocks, RenderWindow& window, Structure& str, Tile* water) {
+void Human::moveDown(Rock& rock, Tileset& waterBlocks, RenderWindow& window, House& house, Tile* water) {
     // Check if the character's bottom is colliding with the bottom edge of the window
     // getSize().x returns an unsigned int, since this variable isn't used to perform calculations, no need to save it is a float
     unsigned int bottomEdge = window.getSize().y;
     float soldierBottom = sprite.getPosition().y + sprite.getGlobalBounds().height;
-    if (soldierBottom <= bottomEdge && !infantryIsColliding(0, 10, rock, waterBlocks, str, water) && shouldBeAbleToMove) {
+    if (soldierBottom <= bottomEdge && !infantryIsColliding(0, 10, rock, waterBlocks, house, water) && shouldBeAbleToMove) {
         startY += 10;
         sprite.setPosition(startX, startY);
     }
 }
 
-void Human::moveUp(Rock& rock, Tileset& waterBlocks, Structure& str, Tile* water) {
-    if (startY > 0 && !infantryIsColliding(0, -10, rock, waterBlocks, str, water) && shouldBeAbleToMove) {
+void Human::moveUp(Rock& rock, Tileset& waterBlocks, House& house, Tile* water) {
+    if (startY > 0 && !infantryIsColliding(0, -10, rock, waterBlocks, house, water) && shouldBeAbleToMove) {
         startY -= 10;
         sprite.setPosition(startX, startY);
     }

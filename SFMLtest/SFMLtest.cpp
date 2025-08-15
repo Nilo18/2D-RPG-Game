@@ -55,7 +55,7 @@ int main() {
     // To determine how many blocks we have to draw we divide the width and height by the tile size and add 1
     // First value of Grass/Water Group takes the texture, second and third starting x and y positions and fourth and fifth the area on which they should span
     Rock rock("assets/rock2.png", 500, 500);
-    Structure house(120, 600, "assets/HOUSe.png");
+    House house("assets/HOUSe.png", 120, 600);
     FloatRect houseHitbox = house.getCollisionBox();
     RectangleShape houseBox;
     houseBox.setPosition(houseHitbox.left, houseHitbox.top);
@@ -153,7 +153,7 @@ int main() {
         window.draw(grassBlocks);
         window.draw(waterBlocks);
         rock.draw(window);
-        house.DrawBuilding(window);
+        window.draw(house);
         //window.draw(debugBox);
         soldier.draw(window);
         window.draw(houseBox);

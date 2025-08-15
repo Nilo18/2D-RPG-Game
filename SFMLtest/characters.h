@@ -28,13 +28,13 @@ private:
     bool shouldBeAbleToMove = true;
 public:
     Human(const string& texturePath, float startX, float startY);
-    void moveLeft(Rock& rock, Tileset& waterBlocks, Structure& str, Tile* water = nullptr);
-    void moveRight(Rock& rock, Tileset& waterBlocks, RenderWindow& window, Structure& str, Tile* water = nullptr);
-    void moveDown(Rock& rock, Tileset& waterBlocks, RenderWindow& window, Structure& str, Tile* water = nullptr);
-    void moveUp(Rock& rock, Tileset& waterBlocks, Structure& str, Tile* water = nullptr);
+    void moveLeft(Rock& rock, Tileset& waterBlocks, House& house, Tile* water = nullptr);
+    void moveRight(Rock& rock, Tileset& waterBlocks, RenderWindow& window, House& house, Tile* water = nullptr);
+    void moveDown(Rock& rock, Tileset& waterBlocks, RenderWindow& window, House& house, Tile* water = nullptr);
+    void moveUp(Rock& rock, Tileset& waterBlocks, House& house, Tile* water = nullptr);
     //void draw(RenderWindow& window) override;
     // Default values must be the last parameters, or all of the following parameters after it must also be default
-    bool infantryIsColliding(int offsetX, int offsetY, Rock& rock, Tileset& waterBlocks, Structure& str, Tile* water = nullptr); // Take all collidable objects as parameters to check for each 
+    bool infantryIsColliding(int offsetX, int offsetY, Rock& rock, Tileset& waterBlocks, House& house, Tile* water = nullptr); // Take all collidable objects as parameters to check for each 
     FloatRect getCollisionBox() override; // We don't return by a const reference here because we're returning a temporary variable, created in the body
     FloatRect getLegHitbox();
     void shouldMove(bool val);
