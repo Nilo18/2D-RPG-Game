@@ -75,17 +75,17 @@ void Tileset::regenerateTiles(const string& texturePath, float startX, float sta
 // Rock methods
 Rock::Rock(const string& texturePath, float startX, float startY) : NatureObject(texturePath, startX, startY) {}
 
-FloatRect Rock::getCollisionBox() {
-    float diameter = sprite.getGlobalBounds().width * 0.5f;
-    float radius = diameter / 2.f;
-
-    float centerX = sprite.getPosition().x + sprite.getGlobalBounds().width / 2.f;
-    float centerY = sprite.getPosition().y + sprite.getGlobalBounds().height / 2.f;
-
-    centerY += 1.1;
-
-    return FloatRect(centerX - radius, centerY - radius, diameter, diameter);
-}
+//FloatRect Rock::getCollisionBox() {
+//    float diameter = sprite.getGlobalBounds().width * 0.5f;
+//    float radius = diameter / 2.f;
+//
+//    float centerX = sprite.getPosition().x + sprite.getGlobalBounds().width / 2.f;
+//    float centerY = sprite.getPosition().y + sprite.getGlobalBounds().height / 2.f;
+//
+//    centerY += 1.1;
+//
+//    return FloatRect(centerX - radius, centerY - radius, diameter, diameter);
+//}
 
 CircleHitbox Rock::getCollisionBoxData() {
     float diameter = sprite.getGlobalBounds().width * 0.6f;
@@ -94,7 +94,7 @@ CircleHitbox Rock::getCollisionBoxData() {
     float centerX = sprite.getPosition().x + sprite.getGlobalBounds().width / 2.f;
     float centerY = sprite.getPosition().y + sprite.getGlobalBounds().height / 2.f;
 
-    centerY += 1.1;
+    centerY += 1.1f;
 
     return { centerX, centerY, radius };
 }

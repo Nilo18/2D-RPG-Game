@@ -4,6 +4,14 @@
 using namespace std;
 using namespace sf;
 
+struct TriangleHitbox {
+	//float topPoint = 0.0f;
+	//float leftPoint = 0.0f;
+	//float width = 0.0f;
+	//float height = 0.0f;
+	Vector2f topPoint, leftPoint, rightPoint;
+};
+
 // Base class for all buildings
 class Structure : public Drawable {
 protected:
@@ -18,7 +26,7 @@ public:
 	// RenderTarget is anything that can be drawn, RanderStates defines the states that the object can be drawn in like rotated
 	// We override it and make it virtual as well so other subclasses which will inherit from it can override it as well
 	virtual void draw(RenderTarget& target, RenderStates states) const override; 
-	virtual FloatRect getCollisionBox(); // Keep it virtual so other objects can override it to fit their own sizes
+	virtual FloatRect getCollisionBox(float left = 0.0f, float top = 0.0f, float width = 0.0f, float height = 0.0f); // Keep it virtual so other objects can override it to fit their own sizes
 	const Sprite& getSprite() const;
 };
 
@@ -32,6 +40,6 @@ public:
 class House : public Structure {
 public:
 	House(const string& texturePath, float startX, float startY);
-	FloatRect getCollisionBox() override;
-	ConvexShape getRoofCollisionBox();
+	FloatRect getCollisionBox(float left = 0.0f, float top = 0.0f, float width = 0.0f, float height = 0.0f) override;
+	TriangleHitbox getRoofCollisionBox(float left = 0.0f, float top = 0.0f, float width = 0.0f, float height = 0.0f);
 };

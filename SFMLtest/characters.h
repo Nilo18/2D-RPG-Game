@@ -6,6 +6,8 @@
 #include "structuress.h"
 #include <iostream>
 #include "Game_GUI.h"
+#include "utils.h"
+#include <array>
 using namespace sf;
 using namespace std;
 
@@ -35,6 +37,7 @@ public:
     //void draw(RenderWindow& window) override;
     // Default values must be the last parameters, or all of the following parameters after it must also be default
     bool infantryIsColliding(int offsetX, int offsetY, Rock& rock, Tileset& waterBlocks, House& house, Tile* water = nullptr); // Take all collidable objects as parameters to check for each 
+    bool shouldAppearBehind(House& house);
     FloatRect getCollisionBox() override; // We don't return by a const reference here because we're returning a temporary variable, created in the body
     FloatRect getLegHitbox();
     void shouldMove(bool val);

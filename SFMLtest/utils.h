@@ -32,7 +32,12 @@ namespace utilities {
 	//};
 	//// This function will load the texture and set the starting coordinates for class constructors
 	//template <typename T>
-	//void initializeObject(const string& texturePath, T& object, float givenX, float givenY); 
+	//void initializeObject(const string& texturePath, T& object, float givenX, float givenY);
+	
+	// Helper function to check if two line segments intersect (Needed for rectangle and triangle collision detection)
+	bool lineSegmentsIntersect(Vector2f p1, Vector2f p2, Vector2f p3, Vector2f p4);
+	// Helper function to check if the points of a rectangle are in a triangle (Needed for rectangle and triangle collision detection)
+	bool pointInTriangle(const Vector2f& P, const Vector2f& A, const Vector2f& B, const Vector2f& C);
 };
 
 #endif

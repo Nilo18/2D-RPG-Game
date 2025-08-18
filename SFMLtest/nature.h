@@ -66,7 +66,7 @@ public:
 class Rock : public NatureObject {
 public:
     Rock(const string& texturePath, float startX, float startY);
-    FloatRect getCollisionBox() override; // We don't return by a const reference here because we're returning a temporary variable, created in the body
+    //FloatRect /*getCollisionBox*/() override; // We don't return by a const reference here because we're returning a temporary variable, created in the body
     CircleHitbox getCollisionBoxData() override;
 };
 

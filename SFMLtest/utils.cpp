@@ -57,5 +57,44 @@ namespace utilities {
 	//	object.sprite.setPosition(object.startX, object.startY);
 
 	//}
+
+	bool lineSegmentsIntersect(Vector2f p1, Vector2f p2, Vector2f p3, Vector2f p4) {
+		// Calculate direction vectors
+		Vector2f d1 = p2 - p1;
+		Vector2f d2 = p4 - p3;
+
+		// Calculate denominators for parametric equations
+		float denominator = d1.x * d2.y - d1.y * d2.x;
+
+		// If denominator is 0, lines are parallel
+		if (abs(denominator) < 1e-10) return false;
+
+		// Calculate parameters for intersection
+		Vector2f d = p3 - p1;
+		float t = (d.x * d2.y - d.y * d2.x) / denominator;
+		float u = (d.x * d1.y - d.y * d1.x) / denominator;
+
+		// Check if intersection point lies within both line segments
+		return (t >= 0 && t <= 1 && u >= 0 && u <= 1);
+	}
+
+	bool pointInTriangle(const Vector2f& P, const Vector2f& A, const Vector2f& B, const Vector2f& C) {
+		float s = A.y * C.x - A.x * C.y + (C.y - A.y) * P.x + (A.x - C.x) * P.y;
+		float t = A.x * B.y - A.y * B.x + (A.y - B.y) * P.x + (B.x - A.x) * P.y;
+
+		if ((s < 0) != (t < 0))
+			return false;
+
+		float area = -B.y * C.x + A.y * (C.x - B.x) + A.x * (B.y - C.y) + B.x * C.y;
+		if (area < 0.0)
+		{
+			s = -s;
+			t = -t;
+			area = -area;
+		}
+
+		return (s > 0) && (t > 0) && (s + t <= area);
+	}
+
 };
 

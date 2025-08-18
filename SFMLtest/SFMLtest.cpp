@@ -63,6 +63,15 @@ int main() {
     houseBox.setOutlineColor(Color::Blue);
     houseBox.setFillColor(Color::Transparent);
     houseBox.setOutlineThickness(1.f);
+    TriangleHitbox roofHitbox = house.getRoofCollisionBox(118.f, 153.f, 229.f, 311.f);
+    ConvexShape roofDebugBox;
+    roofDebugBox.setPointCount(3);
+    roofDebugBox.setPoint(0, roofHitbox.topPoint); // The first parameter is index of the vertex (point)
+    roofDebugBox.setPoint(1, roofHitbox.leftPoint);
+    roofDebugBox.setPoint(2, roofHitbox.rightPoint);
+    roofDebugBox.setFillColor(Color::Transparent);
+    roofDebugBox.setOutlineColor(Color::Green);
+    roofDebugBox.setOutlineThickness(2.f);
     Human soldier("assets/avtandila.png", 100.f, 250.f);
     NPC npc("assets/avtandila.png", 500.f, 0.0f);
     NPC npc1("assets/avtandila.png", 700.f, 0.0f);
@@ -153,10 +162,19 @@ int main() {
         window.draw(grassBlocks);
         window.draw(waterBlocks);
         rock.draw(window);
-        window.draw(house);
+        //window.draw(house);
+        if (soldier.shouldAppearBehind(house)) {
+            soldier.draw(window);
+            window.draw(house);
+        }
+        else {
+            window.draw(house);
+            soldier.draw(window);
+        }
         //window.draw(debugBox);
-        soldier.draw(window);
-        window.draw(houseBox);
+        //soldier.draw(window);
+        //window.draw(houseBox);
+        window.draw(roofDebugBox);
         npc.draw(window);
         //window.draw(soldierBox);
         //window.draw(legHitbox);
