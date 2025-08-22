@@ -44,6 +44,7 @@ static void toggleFullscreen(sf::RenderWindow& window, bool& fullscreen, sf::Vie
 int main() {
     // Create a window with title and size
     RenderWindow window(desktop, "SFML Test Window", Style::Fullscreen);
+	window.setFramerateLimit(60); // Set frame rate limit to 60 fps to avoid using 100% of CPU
     //window.setVisible(false);
     View view;
     view.setSize(static_cast<float>(desktop.width), static_cast<float>(desktop.height));
@@ -159,7 +160,7 @@ int main() {
 
         // Clear the screen with black
         window.clear(Color::Black); // Clear old frame
-        window.draw(grassBlocks);
+        window.draw(grassBlocks);   
         window.draw(waterBlocks);
         rock.draw(window);
         //window.draw(house);

@@ -41,19 +41,19 @@ public:
 class Tile {
 private:
     Sprite sprite;
-    Texture texture;
+    //Texture texture;
     float startX = 0.f;
     float startY = 0.f;
 public:
-    Tile(const string& texturePath, float startX, float startY);
+    Tile(Texture& tex, float startX, float startY);
     Tile(); // For arrays
     const Sprite& getSprite() const;
 };
 
-
 // Base class for every type of tileset
 class Tileset : public Drawable {
 private:
+    Texture texture; // Texture should live as long as the tileset
     vector<unique_ptr<Tile>> tiles;
 public:
     Tileset(const string& texturePath, float startX, float startY, int rowsToSpan, int colsToSpan);
