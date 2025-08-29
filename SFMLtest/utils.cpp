@@ -38,26 +38,6 @@ namespace utilities {
 		shape.setOutlineThickness(style.outlineThickness);
 	}
 
-	//template <typename T>
-	//void initializeObject(const string& texturePath, T& object, float givenX, float givenY) {
-	//	//if (!objectProps.texture.loadFromFile(texturePath)) {
-	//	//	throw runtime_error("Couldn't load texture");
-	//	//}
-	//	//objectProps.sprite.setTexture(objectProps.texture);
-	//	//objectProps.objectX = objectProps.givenX;
-	//	//objectProps.objectY = objectProps.givenY;
-	//	//cout << objectProps.objectX << " " << objectProps.objectY << endl;
-	//	//objectProps.sprite.setPosition(objectProps.objectX, objectProps.objectY);
-	//	if (!object.texture.loadFromFile(texturePath)) {
-	//		throw runtime_error("Couldn't load file");
-	//	}
-	//	object.sprite.setTexture(object.texture);
-	//	object.getX() = givenX;
-	//	object.getY() = givenY;
-	//	object.sprite.setPosition(object.startX, object.startY);
-
-	//}
-
 	bool lineSegmentsIntersect(Vector2f p1, Vector2f p2, Vector2f p3, Vector2f p4) {
 		// Calculate direction vectors
 		Vector2f d1 = p2 - p1;
@@ -94,6 +74,54 @@ namespace utilities {
 		}
 
 		return (s > 0) && (t > 0) && (s + t <= area);
+	}
+
+	bool circleIntersectsRect(float cx, float cy, float radius, const FloatRect& rect) {
+		// clamp restricts a value to a range
+		// it takes (value, min, max) if value is less then min, min is returned
+		// if value is greater than max, max is returned, otherwise value itself is returned
+		// In this case this means that, if the X coordinate of the center of the circle is less than the left edge of the rectangle
+		// It is left of the rectangle and the left edge is the closest collision point
+		// If it is greater than the left edge, that means that it is right to the rectangle, and the right edge (left edge + width determines the right edge)
+		// is the closest collision point, otherwise if the center is less than or equal to either rec.left (left edge) or rec.left + rec.width (right edge)
+		// that means that it is already inside the rectangle, which means collision,
+		// in this case the X coordinate of the center itself is the closest collision point
+		// The same logic applies to the Y coordinate
+		float closestX = clamp(cx, rect.left, rect.left + rect.width);
+		float closestY = clamp(cy, rect.top, rect.top + rect.height);
+
+		// distanceX is the distance horizontally between the center of the circle and the closest collision point
+		// (It is the difference of the center and the closest collision point)
+		// Same goes for distanceY
+		float distanceX = cx - closestX;
+		float distanceY = cy - closestY;
+
+		// If the distance vector is less than or equal to the radius that means that there's no distance between the circle and the rectangle, i.e Collision
+		// Because the circle is inside the rectangle, in this case true will be returned
+		// Otherwise if the distance vector is greater than the radius there means there's still distance between the circle and the rectangle
+		// in this case false will be returned
+		// The formula itself is an alternative form of sqrt(distanceX^2+distanceY^2) <= radius
+		// Both sides of the equation are squared to avoid sqrt() which is expensive in terms of performance
+		return (distanceX * distanceX + distanceY * distanceY) <= (radius * radius);
+	}
+
+	bool pointInRect(const sf::Vector2f& P, const sf::FloatRect& rect) {
+		return (P.x >= rect.left) && (P.x <= rect.left + rect.width) &&
+			(P.y >= rect.top) && (P.y <= rect.top + rect.height);
+	}
+
+	sf::FloatRect unite(const sf::FloatRect& a, const sf::FloatRect& b) {
+		// Find the minimum left and top coordinates
+		float left = std::min(a.left, b.left);
+		// Find the maximum right and bottom coordinates
+		float top = std::min(a.top, b.top);
+		// Calculate width and height based on the new left/top and the farthest right/bottom edges
+		float right = std::max(a.left + a.width, b.left + b.width);
+		// Calculate width and height based on the new left/top and the farthest right/bottom edges
+		float bottom = std::max(a.top + a.height, b.top + b.height);
+
+		// Return a new FloatRect that encompasses both rectangles
+		return sf::FloatRect(left, top, right - left, bottom - top);
 	}
 
 };

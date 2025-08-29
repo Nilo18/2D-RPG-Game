@@ -21,23 +21,14 @@ namespace utilities {
 		float outlineThickness = 0.0f; // default
 	}; 
 	void styleWidget(RectangleShape& shape, const WidgetStyle& style);
-	// Struct to group class object properties like coordinates, textures and sprites together
-	//struct ObjectProperties {
-	//	float objectX = 0.0f; // class object's X coordinate
-	//	float objectY = 0.0f; // class object's Y coordinate
-	//	float givenX = 0.0f; // given X coordinate to initialize the class object's coordinate above
-	//	float givenY = 0.0f; // given Y coordinate to initialize the class object's coordinate above
-	//	Texture texture; // class object's texture
-	//	Sprite sprite; // class object's sprite
-	//};
-	//// This function will load the texture and set the starting coordinates for class constructors
-	//template <typename T>
-	//void initializeObject(const string& texturePath, T& object, float givenX, float givenY);
-	
 	// Helper function to check if two line segments intersect (Needed for rectangle and triangle collision detection)
 	bool lineSegmentsIntersect(Vector2f p1, Vector2f p2, Vector2f p3, Vector2f p4);
 	// Helper function to check if the points of a rectangle are in a triangle (Needed for rectangle and triangle collision detection)
 	bool pointInTriangle(const Vector2f& P, const Vector2f& A, const Vector2f& B, const Vector2f& C);
+	bool circleIntersectsRect(float cx, float cy, float radius, const FloatRect& rect);
+	// Helper function to check if the points of a triangle are in a rectangle (Needed for rectangle and triangle collision detection)
+	bool pointInRect(const sf::Vector2f& P, const sf::FloatRect& rect); 
+	sf::FloatRect unite(const sf::FloatRect& a, const sf::FloatRect& b); 
 };
 
 #endif

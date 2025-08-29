@@ -9,6 +9,7 @@
 #include "nature.h"
 #include "characters.h"
 #include "structuress.h"
+#include "CollisionManager.h"
 using namespace sf;
 using namespace std;
 const float moveDelay = 0.03f;
@@ -16,8 +17,8 @@ const float npcTalkDuration = 5.f;
 bool npcShouldTalk = false;
 VideoMode desktop = VideoMode::getDesktopMode();
 Tileset grassBlocks("assets/grass2.png", 0, 0, desktop.height / TILE_SIZE + 1, desktop.width / TILE_SIZE + 1); // Globally declared grass block
-Tileset waterBlocks("assets/water7.png", 0, 0, 3, 5);
- 
+shared_ptr<WaterGroup> waterBlocks = make_shared<WaterGroup>("assets/water7.png", 0, 0, 3, 5);
+
 static void toggleFullscreen(sf::RenderWindow& window, bool& fullscreen, sf::View& view) {
     fullscreen = !fullscreen; // This line makes sure that both setting full screen and exiting it are run on the same button (F11)
     sf::Vector2u windowedSize(990, 880);  // Basic size of window
@@ -30,7 +31,7 @@ static void toggleFullscreen(sf::RenderWindow& window, bool& fullscreen, sf::Vie
     // If it is not, use the base resolution
     else
         window.create(sf::VideoMode(windowedSize.x, windowedSize.y), "SFML", sf::Style::Default);
-    
+
     Vector2u currentSize = window.getSize();
     view.setSize(static_cast<float>(currentSize.x), static_cast<float>(currentSize.y)); // Set the size of the view to match the base size
     view.setCenter(currentSize.x / 2.f, currentSize.y / 2.f); // Center the view
@@ -38,13 +39,16 @@ static void toggleFullscreen(sf::RenderWindow& window, bool& fullscreen, sf::Vie
 
     // Regenerate tiles on resolution change
     grassBlocks.regenerateTiles("assets/grass2.png", 0, 0, currentSize.y / TILE_SIZE + 1, currentSize.x / TILE_SIZE + 1);
-    waterBlocks.regenerateTiles("assets/water7.png", 0, 0, 3, 5);
+    waterBlocks->regenerateTiles("assets/water7.png", 0, 0, 3, 5);
 }
 
 int main() {
     // Create a window with title and size
     RenderWindow window(desktop, "SFML Test Window", Style::Fullscreen);
-	window.setFramerateLimit(60); // Set frame rate limit to 60 fps to avoid using 100% of CPU
+    CollisionManager collisionManager;
+    //waterBlocks->setHitboxOffset(0.f, 0.f, 0.f, 0.f);
+    collisionManager.registerObject(static_pointer_cast<Collidable>(waterBlocks));
+    window.setFramerateLimit(60); // Set frame rate limit to 60 fps to avoid using 100% of CPU
     //window.setVisible(false);
     View view;
     view.setSize(static_cast<float>(desktop.width), static_cast<float>(desktop.height));
@@ -52,19 +56,22 @@ int main() {
     window.setView(view);
 
     bool fullscreen = true;
-     
+
     // To determine how many blocks we have to draw we divide the width and height by the tile size and add 1
     // First value of Grass/Water Group takes the texture, second and third starting x and y positions and fourth and fifth the area on which they should span
-    Rock rock("assets/rock2.png", 500, 500);
-    House house("assets/HOUSe.png", 120, 600);
-    FloatRect houseHitbox = house.getCollisionBox();
+    shared_ptr<Rock> rock = make_shared<Rock>("assets/rock2.png", 500, 500);
+	collisionManager.registerObject(static_pointer_cast<Collidable>(rock)); // cast rock to Collidable and register it
+    shared_ptr<House> house = make_shared<House>("assets/HOUSe.png", 120, 600);
+	house->setHitboxOffset(118.f, 153.f, 229.f, 311.f); // Predifine the hitbox offset for the house so don't have to pass the arguments every time we create a house object
+    collisionManager.registerObject(static_pointer_cast<Collidable>(house));
+    FloatRect houseHitbox = house->getCollisionBox()->getRect();
     RectangleShape houseBox;
     houseBox.setPosition(houseHitbox.left, houseHitbox.top);
     houseBox.setSize({ houseHitbox.width, houseHitbox.height });
     houseBox.setOutlineColor(Color::Blue);
     houseBox.setFillColor(Color::Transparent);
     houseBox.setOutlineThickness(1.f);
-    TriangleHitbox roofHitbox = house.getRoofCollisionBox(118.f, 153.f, 229.f, 311.f);
+    TriangleHitbox roofHitbox = house->getRoofCollisionBox();
     ConvexShape roofDebugBox;
     roofDebugBox.setPointCount(3);
     roofDebugBox.setPoint(0, roofHitbox.topPoint); // The first parameter is index of the vertex (point)
@@ -73,16 +80,20 @@ int main() {
     roofDebugBox.setFillColor(Color::Transparent);
     roofDebugBox.setOutlineColor(Color::Green);
     roofDebugBox.setOutlineThickness(2.f);
-    Human soldier("assets/avtandila.png", 100.f, 250.f);
-    NPC npc("assets/avtandila.png", 500.f, 0.0f);
-    NPC npc1("assets/avtandila.png", 700.f, 0.0f);
-    npc.setScale(2.f, 2.f);
-    soldier.setScale(2.f, 2.f);  // doubles width and height
+    shared_ptr<Human> soldier = make_shared<Human>("assets/avtandila.png", 100.f, 250.f);
+    soldier->setHitboxOffset(20.f, 35.f, 66.f, 65.f);
+	collisionManager.registerObject(static_pointer_cast<Collidable>(soldier)); // cast soldier to Collidable and register it
+    shared_ptr<NPC> npc = make_shared<NPC>("assets/avtandila.png", 500.f, 0.0f);
+    collisionManager.registerObject(static_pointer_cast<Collidable>(npc)); // cast npc to Collidable and register it
+
+    FloatRect npcBox = npc->getCollisionBox()->getRect();
+    npc->setScale(2.f, 2.f);
+    soldier->setScale(2.f, 2.f);  // doubles width and height
 
     Clock moveTime;
-    FloatRect bounds = rock.getCollisionBox();
+    FloatRect bounds = rock->getCollisionBox()->getRect();
 
-    CircleHitbox hitbox = rock.getCollisionBoxData();
+    CircleHitbox hitbox = rock->getCollisionBoxData();
 
     CircleShape debugBox;
     debugBox.setRadius(hitbox.radius);
@@ -92,7 +103,7 @@ int main() {
     debugBox.setOutlineColor(Color::Red);
     debugBox.setOutlineThickness(1.f); // Required to see the red outline
 
-    sf::FloatRect soldierBounds = soldier.getCollisionBox();  // Or next position with offset
+    FloatRect soldierBounds = soldier->getCollisionBox()->getRect();  // Or next position with offset
     sf::RectangleShape soldierBox;
     soldierBox.setPosition(soldierBounds.left, soldierBounds.top);
     soldierBox.setSize({ soldierBounds.width, soldierBounds.height });
@@ -100,7 +111,7 @@ int main() {
     soldierBox.setOutlineThickness(1.f);
     soldierBox.setFillColor(sf::Color::Transparent);
 
-    FloatRect soldierLegHitbox = soldier.getLegHitbox();
+    FloatRect soldierLegHitbox = soldier->getLegHitbox()->getRect();
     RectangleShape legHitbox;
     legHitbox.setPosition(soldierLegHitbox.left, soldierLegHitbox.top);
     legHitbox.setSize({ soldierLegHitbox.width, soldierLegHitbox.height });
@@ -109,6 +120,7 @@ int main() {
     legHitbox.setFillColor(sf::Color::Transparent);
 
     //Clock npcTalkTime;
+    //std::cout << "npc ptr: " << npc.get() << std::endl;
     window.setVisible(true);
     // Main loop
     while (window.isOpen()) {
@@ -118,14 +130,18 @@ int main() {
             if (event.type == Event::Closed)
                 window.close();
             // If F was pressed and the player is within the range of the npc, the npc should be able to talk
-            if (event.type == Event::KeyPressed && event.key.code == Keyboard::F && (npc.getCollisionBox().intersects(soldier.getCollisionBox()) || npc.getCollisionBox().intersects(soldier.getLegHitbox()))) {
+            // Check for the sides from which the player is approaching 
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::F && (collisionManager.checkCollision(soldier, 10, 0) || 
+                collisionManager.checkCollision(soldier, -10, 0)
+                || collisionManager.checkCollision(soldier, 0, 10)
+                || collisionManager.checkCollision(soldier, 0, -10))) {
                 npcShouldTalk = true;
-                soldier.shouldMove(false); // The player shouldn't be able to move while talking
+                soldier->shouldMove(false); // The player shouldn't be able to move while talking
             }
             //If Enter was pressed the npc shouldn't be able to talk anymore
             if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter) {
                 npcShouldTalk = false;
-                soldier.shouldMove(true);
+                soldier->shouldMove(true);
             }
             if (event.type == sf::Event::Resized) {
                 //LetterBoxView(window, view, event.size.width, event.size.height);
@@ -134,56 +150,55 @@ int main() {
                 window.setView(view);
                 // Regenerate tiles on resolution change
                 grassBlocks.regenerateTiles("assets/grass2.png", 0, 0, event.size.height / TILE_SIZE + 1, event.size.width / TILE_SIZE + 1);
-                waterBlocks.regenerateTiles("assets/water7.png", 0, 0, 3, 5);
+                waterBlocks->regenerateTiles("assets/water7.png", 0, 0, 3, 5);
             }
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F11) {
                 toggleFullscreen(window, fullscreen, view);
             }
         }
 
+		// Pass the offsets to get the next position of the player
         if (moveTime.getElapsedTime().asSeconds() > moveDelay) {
             //If key is pressed check which one is it
-            if (Keyboard::isKeyPressed(Keyboard::A)) {
-                soldier.moveLeft(rock, waterBlocks, house);
+            if (Keyboard::isKeyPressed(Keyboard::A) && !collisionManager.checkCollision(soldier, -10, 0)) {
+                soldier->moveLeft();
             }
-            if (Keyboard::isKeyPressed(Keyboard::D)) {
-                soldier.moveRight(rock, waterBlocks, window, house);
+            if (Keyboard::isKeyPressed(Keyboard::D) && !collisionManager.checkCollision(soldier, 10, 0)) {
+				soldier->moveRight(window); // Pass window to moveRight to get the current width of the window for boundary checking
             }
-            if (Keyboard::isKeyPressed(Keyboard::S)) {
-                soldier.moveDown(rock, waterBlocks, window, house);
+            if (Keyboard::isKeyPressed(Keyboard::S) && !collisionManager.checkCollision(soldier, 0, 10)) {
+                soldier->moveDown(window);
             }
-            if (Keyboard::isKeyPressed(Keyboard::W)) {
-                soldier.moveUp(rock, waterBlocks, house);
+            if (Keyboard::isKeyPressed(Keyboard::W) && !collisionManager.checkCollision(soldier, 0, -10)) {
+                soldier->moveUp();
             }
             moveTime.restart();
         }
 
         // Clear the screen with black
         window.clear(Color::Black); // Clear old frame
-        window.draw(grassBlocks);   
-        window.draw(waterBlocks);
-        rock.draw(window);
+        window.draw(grassBlocks);
+        window.draw(*waterBlocks);
+		window.draw(*rock);
         //window.draw(house);
-        if (soldier.shouldAppearBehind(house)) {
-            soldier.draw(window);
-            window.draw(house);
+        if (soldier->shouldAppearBehind(house)) {
+            soldier->draw(window);
+            window.draw(*house);
         }
         else {
-            window.draw(house);
-            soldier.draw(window);
+            window.draw(*house);
+            soldier->draw(window);
         }
         //window.draw(debugBox);
         //soldier.draw(window);
-        //window.draw(houseBox);
+        window.draw(houseBox);
         window.draw(roofDebugBox);
-        npc.draw(window);
-        //window.draw(soldierBox);
-        //window.draw(legHitbox);
+        npc->draw(window);
+        window.draw(soldierBox);
+        window.draw(legHitbox);
         if (npcShouldTalk) {
-            npc.talk(window, soldier);
+            npc->talk(window);
         }
         window.display(); // Tell the app that the window is done drawing
     }
-
 }
-

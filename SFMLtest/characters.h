@@ -7,6 +7,7 @@
 #include <iostream>
 #include "Game_GUI.h"
 #include "utils.h"
+#include "CollisionManager.h"
 #include <array>
 using namespace sf;
 using namespace std;
@@ -20,37 +21,40 @@ protected:
     float startY;
 public:
     Entity(const string& texturePath, float startX, float startY);
-    virtual FloatRect getCollisionBox(); 
+    //virtual FloatRect getCollisionBox(); 
     void setScale(float scaleX, float scaleY);
     virtual void draw(RenderWindow& window);
 };
 
-class Human : public Entity {
+class Human : public Entity, public Collidable {
 private:
+    RectangleHitbox collisionBox;
+	RectangleHitbox legHitbox; // Smaller hitbox for legs to allow better movement around obstacles
     bool shouldBeAbleToMove = true;
 public:
     Human(const string& texturePath, float startX, float startY);
-    void moveLeft(Rock& rock, Tileset& waterBlocks, House& house, Tile* water = nullptr);
-    void moveRight(Rock& rock, Tileset& waterBlocks, RenderWindow& window, House& house, Tile* water = nullptr);
-    void moveDown(Rock& rock, Tileset& waterBlocks, RenderWindow& window, House& house, Tile* water = nullptr);
-    void moveUp(Rock& rock, Tileset& waterBlocks, House& house, Tile* water = nullptr);
+    void moveLeft();
+    void moveRight(RenderWindow& window);
+    void moveDown(RenderWindow& window);
+    void moveUp();
     //void draw(RenderWindow& window) override;
     // Default values must be the last parameters, or all of the following parameters after it must also be default
-    bool infantryIsColliding(int offsetX, int offsetY, Rock& rock, Tileset& waterBlocks, House& house, Tile* water = nullptr); // Take all collidable objects as parameters to check for each 
-    bool shouldAppearBehind(House& house);
-    FloatRect getCollisionBox() override; // We don't return by a const reference here because we're returning a temporary variable, created in the body
-    FloatRect getLegHitbox();
+    //bool infantryIsColliding(int offsetX, int offsetY, Rock& rock, Tileset& waterBlocks, House& house, Tile* water = nullptr); // Take all collidable objects as parameters to check for each 
+    bool shouldAppearBehind(const std::shared_ptr<House>& house);
+    const Hitbox* getCollisionBox(float left = 0.0f, float top = 0.0f, float width = 0.0f, float height = 0.0f) override; // We don't return by a const reference here because we're returning a temporary variable, created in the body
+    const Hitbox* getLegHitbox(float left = 0.0f, float top = 0.0f, float width = 0.0f, float height = 0.0f);
     void shouldMove(bool val);
+    void setHitboxOffset(float left, float top, float width, float height) override;
 };
 
-bool circleIntersectsRect(float cx, float cy, float radius, const FloatRect& rect);
-
-class NPC : public Entity {
+class NPC : public Entity, public Collidable {
 private:
-//    Font font;
+    RectangleHitbox npcHitbox;
 public:
     NPC(const string& texturePath, float startX, float startY);
-    void talk(RenderWindow& window, Human& player);
+    void talk(RenderWindow& window);
+    void setHitboxOffset(float left, float top, float width, float height) override;
+    const Hitbox* getCollisionBox(float left = 0.0f, float top = 0.0f, float width = 0.0f, float height = 0.0f) override;
 };
 
 
