@@ -6,6 +6,11 @@
 #include <sstream>
 #include <stdexcept>
 #include <SFML/Graphics.hpp>
+#include "CircleIntersectsRect.h"
+#include "PointsInRect.h"
+#include "CircleHitbox.h"
+#include "TriangleHitbox.h"
+#include "PointsInTriangle.h"
 using namespace std;
 using namespace sf;
 
@@ -23,12 +28,12 @@ namespace utilities {
 	void styleWidget(RectangleShape& shape, const WidgetStyle& style);
 	// Helper function to check if two line segments intersect (Needed for rectangle and triangle collision detection)
 	bool lineSegmentsIntersect(Vector2f p1, Vector2f p2, Vector2f p3, Vector2f p4);
-	// Helper function to check if the points of a rectangle are in a triangle (Needed for rectangle and triangle collision detection)
-	bool pointInTriangle(const Vector2f& P, const Vector2f& A, const Vector2f& B, const Vector2f& C);
-	bool circleIntersectsRect(float cx, float cy, float radius, const FloatRect& rect);
-	// Helper function to check if the points of a triangle are in a rectangle (Needed for rectangle and triangle collision detection)
-	bool pointInRect(const sf::Vector2f& P, const sf::FloatRect& rect); 
+	//bool pointInRect(const sf::Vector2f& P, const sf::FloatRect& rect); 
 	sf::FloatRect unite(const sf::FloatRect& a, const sf::FloatRect& b); 
+	// Helper functions for drawing hitboxes for debugging
+	RectangleShape createRectangleDebugBox(const FloatRect& recHitbox, const Color& outlineColor, const Color& fillColor, const float outlineThickness);
+	CircleShape createCircleDebugBox(const CircleHitbox& cirHitbox, const Color& outlineColor, const Color& fillColor, const float outlineThickness);
+	ConvexShape createTriangleDebugBox(const TriangleHitbox& trHitbox, const Color& outlineColor, const Color& fillColor, const float outlineThickness);
 };
 
 #endif

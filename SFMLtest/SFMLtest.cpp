@@ -65,21 +65,10 @@ int main() {
 	house->setHitboxOffset(118.f, 153.f, 229.f, 311.f); // Predifine the hitbox offset for the house so don't have to pass the arguments every time we create a house object
     collisionManager.registerObject(static_pointer_cast<Collidable>(house));
     FloatRect houseHitbox = house->getCollisionBox()->getRect();
-    RectangleShape houseBox;
-    houseBox.setPosition(houseHitbox.left, houseHitbox.top);
-    houseBox.setSize({ houseHitbox.width, houseHitbox.height });
-    houseBox.setOutlineColor(Color::Blue);
-    houseBox.setFillColor(Color::Transparent);
-    houseBox.setOutlineThickness(1.f);
+    RectangleShape houseBox = utilities::createRectangleDebugBox(houseHitbox, Color::Blue, Color::Transparent, 1.f);
     TriangleHitbox roofHitbox = house->getRoofCollisionBox();
-    ConvexShape roofDebugBox;
-    roofDebugBox.setPointCount(3);
-    roofDebugBox.setPoint(0, roofHitbox.topPoint); // The first parameter is index of the vertex (point)
-    roofDebugBox.setPoint(1, roofHitbox.leftPoint);
-    roofDebugBox.setPoint(2, roofHitbox.rightPoint);
-    roofDebugBox.setFillColor(Color::Transparent);
-    roofDebugBox.setOutlineColor(Color::Green);
-    roofDebugBox.setOutlineThickness(2.f);
+    ConvexShape roofDebugBox = utilities::createTriangleDebugBox(roofHitbox, Color::Green, Color::Transparent, 2.f);
+
     shared_ptr<Human> soldier = make_shared<Human>("assets/avtandila.png", 100.f, 250.f);
     soldier->setHitboxOffset(20.f, 35.f, 66.f, 65.f);
 	collisionManager.registerObject(static_pointer_cast<Collidable>(soldier)); // cast soldier to Collidable and register it
@@ -95,29 +84,13 @@ int main() {
 
     CircleHitbox hitbox = rock->getCollisionBoxData();
 
-    CircleShape debugBox;
-    debugBox.setRadius(hitbox.radius);
-    debugBox.setOrigin(hitbox.radius, hitbox.radius);
-    debugBox.setPosition(hitbox.centerX, hitbox.centerY);
-    debugBox.setFillColor(Color::Transparent);
-    debugBox.setOutlineColor(Color::Red);
-    debugBox.setOutlineThickness(1.f); // Required to see the red outline
+    CircleShape debugBox = utilities::createCircleDebugBox(hitbox, Color::Red, Color::Transparent, 1.f);
 
     FloatRect soldierBounds = soldier->getCollisionBox()->getRect();  // Or next position with offset
-    sf::RectangleShape soldierBox;
-    soldierBox.setPosition(soldierBounds.left, soldierBounds.top);
-    soldierBox.setSize({ soldierBounds.width, soldierBounds.height });
-    soldierBox.setOutlineColor(sf::Color::Blue);
-    soldierBox.setOutlineThickness(1.f);
-    soldierBox.setFillColor(sf::Color::Transparent);
+    sf::RectangleShape soldierBox = utilities::createRectangleDebugBox(soldierBounds, Color::Blue, Color::Transparent, 1.f);
 
     FloatRect soldierLegHitbox = soldier->getLegHitbox()->getRect();
-    RectangleShape legHitbox;
-    legHitbox.setPosition(soldierLegHitbox.left, soldierLegHitbox.top);
-    legHitbox.setSize({ soldierLegHitbox.width, soldierLegHitbox.height });
-    legHitbox.setOutlineColor(sf::Color::Yellow);
-    legHitbox.setOutlineThickness(1.f);
-    legHitbox.setFillColor(sf::Color::Transparent);
+    RectangleShape legHitbox = utilities::createRectangleDebugBox(soldierLegHitbox, Color::Yellow, Color::Transparent, 1.f);
 
     //Clock npcTalkTime;
     //std::cout << "npc ptr: " << npc.get() << std::endl;
@@ -189,7 +162,7 @@ int main() {
             window.draw(*house);
             soldier->draw(window);
         }
-        //window.draw(debugBox);
+        window.draw(debugBox);
         //soldier.draw(window);
         window.draw(houseBox);
         window.draw(roofDebugBox);

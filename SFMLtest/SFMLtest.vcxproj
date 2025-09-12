@@ -149,12 +149,19 @@
     <Text Include="..\..\..\..\Downloads\tilemap.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CircleHitbox.h" />
+    <ClInclude Include="CircleIntersectsRect.h" />
     <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="Hitbox.h" />
+    <ClInclude Include="PointsInRect.h" />
+    <ClInclude Include="PointsInTriangle.h" />
+    <ClInclude Include="RectangleHitbox.h" />
     <ClInclude Include="structuress.h" />
     <ClInclude Include="characters.h" />
     <ClInclude Include="Game_GUI.h" />
     <ClInclude Include="nature.h" />
     <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="TriangleHitbox.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
