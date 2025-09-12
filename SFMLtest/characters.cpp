@@ -64,40 +64,6 @@ const Hitbox* Human::getLegHitbox(float left, float top, float width, float heig
     return &legHitbox;
 }
 
-//bool Human::infantryIsColliding(int offsetX, int offsetY, Rock& rock, Tileset& waterBlocks, House& house, Tile* water) {
-//    FloatRect nextBounds = getCollisionBox();
-//    nextBounds.left += offsetX;
-//    nextBounds.top += offsetY;
-//
-//    FloatRect legsBox = getLegHitbox();
-//    legsBox.left += offsetX;
-//    legsBox.top += offsetY;
-//
-//    CircleHitbox rockHitbox = rock.getCollisionBoxData();
-//
-//    if (circleIntersectsRect(rockHitbox.centerX, rockHitbox.centerY, rockHitbox.radius, nextBounds) ||
-//        circleIntersectsRect(rockHitbox.centerX, rockHitbox.centerY, rockHitbox.radius, legsBox)) {
-//        return true;
-//    }
-//    // Note: If one of the else ifs is evaluated as true the rest will be skipped
-//    else if (water != nullptr && nextBounds.intersects(water->getSprite().getGlobalBounds())) {
-//        return true;
-//    }
-//    else if (nextBounds.intersects(house.getCollisionBox(118.f, 153.f, 229.f, 311.f)) || legsBox.intersects(house.getCollisionBox(118.f, 153.f, 229.f, 311.f))) {
-//        return true;
-//    }
-//
-//    if (!waterBlocks.getTiles().empty()) {
-//        for (const auto& waterBlock : waterBlocks.getTiles()) {
-//            if (nextBounds.intersects(waterBlock->getSprite().getGlobalBounds())) {
-//                return true;
-//            }
-//        }
-//    }
-//
-//    return false;
-//}
-
 bool Human::shouldAppearBehind(const std::shared_ptr<House>& house) {
     // Avoid dynamic_cast because since we have to return bool if we can't return FloatRect{} in case dynamic_cast returns nullptr
     FloatRect nextBounds = getCollisionBox()->getRect();
@@ -105,6 +71,9 @@ bool Human::shouldAppearBehind(const std::shared_ptr<House>& house) {
 
     TriangleHitbox houseRoofBox = house->getRoofCollisionBox();
     array<Vector2f, 3> points = { houseRoofBox.topPoint, houseRoofBox.leftPoint, houseRoofBox.rightPoint };
+
+    TriangleHitbox houseChimneyBox = house->getChimneyCollisionBox();
+    array<Vector2f, 3> chimneyPoints = { houseChimneyBox.topPoint, houseChimneyBox.leftPoint, houseChimneyBox.rightPoint };
 
     // Rectangle vertices
     array<Vector2f, 4> bodyVertices = {
@@ -138,17 +107,36 @@ bool Human::shouldAppearBehind(const std::shared_ptr<House>& house) {
         }
     }
 
+    if (!chimneyPoints.empty()) {
+        for (const auto& point : chimneyPoints) {
+            // If any of the vertices are inside the left edge or the right edge, collision detected
+            // Same goes for the legs
+            if (((point.x >= nextBounds.left && point.x <= nextBounds.left + nextBounds.width)
+                && (point.y >= nextBounds.top && point.y <= nextBounds.top + nextBounds.height)) ||
+                ((point.x >= legsBox.left && point.x <= legsBox.left + legsBox.width)
+                    && (point.y >= legsBox.top && point.y <= legsBox.top + legsBox.height))) {
+                return true;
+            }
+        }
+    }
+
     // Check if body vertices are inside the triangle
     if (!bodyVertices.empty()) {
         for (const auto& vertex : bodyVertices) {
+            // For the roof
             if (utilities::pointInTriangle(vertex, points[0], points[1], points[2])) return true;
+            // For the chimney
+            if (utilities::pointInTriangle(vertex, chimneyPoints[0], chimneyPoints[1], chimneyPoints[2])) return true;
         }
     }
 
     // Check if leg vertices are inside the triangle
     if (!legVertices.empty()) {
         for (const auto& vertex : legVertices) {
+            // For the roof
             if (utilities::pointInTriangle(vertex, points[0], points[1], points[2])) return true;
+            // For the chimney
+            if (utilities::pointInTriangle(vertex, chimneyPoints[0], chimneyPoints[1], chimneyPoints[2])) return true;
         }
     }
 
@@ -175,17 +163,37 @@ bool Human::shouldAppearBehind(const std::shared_ptr<House>& house) {
         make_pair(points[2], points[1])
     };
 
+    // And for the chimney
+    array<pair<Vector2f, Vector2f>, 3> chimneyTriEdges = {
+        make_pair(chimneyPoints[0], chimneyPoints[1]),
+        make_pair(chimneyPoints[1], chimneyPoints[2]),
+        make_pair(chimneyPoints[2], chimneyPoints[1])
+    };
+
+
     // Check intersections between rectangle edges and triangle edges
-    for (const auto& rectEdge : rectEdges) {
-        for (const auto& triEdge : triEdges) {
-            if (utilities::lineSegmentsIntersect(rectEdge.first, rectEdge.second, triEdge.first, triEdge.second)) return true; // Collision detected
+    if (!rectEdges.empty()) {
+        for (const auto& rectEdge : rectEdges) {
+            for (const auto& triEdge : triEdges) {
+                if (utilities::lineSegmentsIntersect(rectEdge.first, rectEdge.second, triEdge.first, triEdge.second)) return true; // Collision detected
+            }
+
+            for (const auto& chimneyTriEdge : chimneyTriEdges) {
+                if (utilities::lineSegmentsIntersect(rectEdge.first, rectEdge.second, chimneyTriEdge.first, chimneyTriEdge.second)) return true; // Collision detected
+            }
         }
     }
 
     // Check intersections between legs rectangle edges and triangle edges
-    for (const auto& legEdge : legsEdges) {
-        for (const auto& triEdge : triEdges) {
-            if (utilities::lineSegmentsIntersect(legEdge.first, legEdge.second, triEdge.first, triEdge.second)) return true; // Collision detected
+    if (!legsEdges.empty()) {
+        for (const auto& legEdge : legsEdges) {
+            for (const auto& triEdge : triEdges) {
+                if (utilities::lineSegmentsIntersect(legEdge.first, legEdge.second, triEdge.first, triEdge.second)) return true; // Collision detected
+            }
+
+            for (const auto& chimneyTriEdge : chimneyTriEdges) {
+                if (utilities::lineSegmentsIntersect(legEdge.first, legEdge.second, chimneyTriEdge.first, chimneyTriEdge.second)) return true; // Collision detected
+            }
         }
     }
 

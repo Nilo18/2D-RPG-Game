@@ -38,5 +38,6 @@ public:
 	House(const string& texturePath, float startX, float startY);
 	void setHitboxOffset(float left, float top, float width, float height) override;
 	const Hitbox* getCollisionBox(float left = 0.0f, float top = 0.0f, float width = 0.0f, float height = 0.0f) override;
-	TriangleHitbox getRoofCollisionBox(float left = 0.0f, float top = 0.0f, float width = 0.0f, float height = 0.0f);
+	TriangleHitbox getRoofCollisionBox();
+	TriangleHitbox getChimneyCollisionBox();
 };

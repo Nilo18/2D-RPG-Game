@@ -40,13 +40,23 @@ const Hitbox* House::getCollisionBox(float left, float top, float width, float h
 	return &houseBox;
 }
 
-TriangleHitbox House::getRoofCollisionBox(float left, float top, float width, float height) {
+TriangleHitbox House::getRoofCollisionBox() {
 	// Pass the given values to the base collision box to initialize it
-	FloatRect bounds = getCollisionBox(left, top, width, height)->getRect(); // Lower part of the roof collision box
+	FloatRect bounds = getCollisionBox()->getRect(); // Lower part of the roof collision box
 
 	Vector2f topPoint(bounds.left + bounds.width / 2.f, bounds.top - 130.f);
 	Vector2f leftPoint(bounds.left, bounds.top);
 	Vector2f rightPoint(bounds.left + bounds.width, bounds.top);
 
 	return { topPoint, leftPoint, rightPoint };
+}
+
+TriangleHitbox House::getChimneyCollisionBox() {
+	TriangleHitbox roofHitbox = getRoofCollisionBox();
+
+	Vector2f topPoint((roofHitbox.leftPoint.x + roofHitbox.rightPoint.x) / 1.6f, (roofHitbox.topPoint.y + roofHitbox.leftPoint.y) / 2.f - 27.f);
+	Vector2f leftPoint((roofHitbox.leftPoint.x + roofHitbox.rightPoint.x) / 1.6f, (roofHitbox.topPoint.y + roofHitbox.leftPoint.y) / 2.f + 25.f);
+	Vector2f rightPoint((roofHitbox.leftPoint.x + roofHitbox.rightPoint.x) / 1.8f, (roofHitbox.topPoint.y + roofHitbox.leftPoint.y) / 2.f - 27.f);
+
+	return { topPoint, leftPoint, rightPoint};
 }

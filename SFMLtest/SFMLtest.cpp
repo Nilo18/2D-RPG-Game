@@ -64,10 +64,15 @@ int main() {
     shared_ptr<House> house = make_shared<House>("assets/HOUSe.png", 120, 600);
 	house->setHitboxOffset(118.f, 153.f, 229.f, 311.f); // Predifine the hitbox offset for the house so don't have to pass the arguments every time we create a house object
     collisionManager.registerObject(static_pointer_cast<Collidable>(house));
+
     FloatRect houseHitbox = house->getCollisionBox()->getRect();
     RectangleShape houseBox = utilities::createRectangleDebugBox(houseHitbox, Color::Blue, Color::Transparent, 1.f);
+
     TriangleHitbox roofHitbox = house->getRoofCollisionBox();
     ConvexShape roofDebugBox = utilities::createTriangleDebugBox(roofHitbox, Color::Green, Color::Transparent, 2.f);
+
+    TriangleHitbox chimneyHitbox = house->getChimneyCollisionBox();
+    ConvexShape chimneyDebugBox = utilities::createTriangleDebugBox(chimneyHitbox, Color::Magenta, Color::Transparent, 2.f);
 
     shared_ptr<Human> soldier = make_shared<Human>("assets/avtandila.png", 100.f, 250.f);
     soldier->setHitboxOffset(20.f, 35.f, 66.f, 65.f);
@@ -162,13 +167,14 @@ int main() {
             window.draw(*house);
             soldier->draw(window);
         }
-        window.draw(debugBox);
+        //window.draw(debugBox);
         //soldier.draw(window);
-        window.draw(houseBox);
-        window.draw(roofDebugBox);
+        //window.draw(houseBox);
+        //window.draw(roofDebugBox);
+        //window.draw(chimneyDebugBox);
         npc->draw(window);
-        window.draw(soldierBox);
-        window.draw(legHitbox);
+        //window.draw(soldierBox);
+        //window.draw(legHitbox);
         if (npcShouldTalk) {
             npc->talk(window);
         }
