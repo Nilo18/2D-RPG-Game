@@ -74,7 +74,7 @@ int main() {
     TriangleHitbox chimneyHitbox = house->getChimneyCollisionBox();
     ConvexShape chimneyDebugBox = utilities::createTriangleDebugBox(chimneyHitbox, Color::Magenta, Color::Transparent, 2.f);
 
-    shared_ptr<Human> soldier = make_shared<Human>("assets/avtandila.png", 100.f, 250.f);
+    shared_ptr<Human> soldier = make_shared<Human>("assets/IMG_3003.png", 100.f, 250.f);
     soldier->setHitboxOffset(20.f, 35.f, 66.f, 65.f);
 	collisionManager.registerObject(static_pointer_cast<Collidable>(soldier)); // cast soldier to Collidable and register it
     shared_ptr<NPC> npc = make_shared<NPC>("assets/avtandila.png", 500.f, 0.0f);
@@ -82,7 +82,7 @@ int main() {
 
     FloatRect npcBox = npc->getCollisionBox()->getRect();
     npc->setScale(2.f, 2.f);
-    soldier->setScale(2.f, 2.f);  // doubles width and height
+    soldier->setScale(0.5f, 0.5f);  // doubles width and height
 
     Clock moveTime;
     FloatRect bounds = rock->getCollisionBox()->getRect();
